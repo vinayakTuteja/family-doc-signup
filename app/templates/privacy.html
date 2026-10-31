@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Privacy notice · {{ settings.app_name }}{% endblock %}
+{% block content %}
+<article class="card prose">
+  <h1>Privacy notice</h1>
+  <p class="hint">Version {{ settings.consent_version }}</p>
+
+  <p>{{ settings.app_name }} helps people in Ontario find a family doctor. This notice explains what we collect, why,
+    who sees it and when we delete it. We follow Canada's federal privacy law for businesses (PIPEDA).</p>
+
+  <h2>What we collect</h2>
+  <ul>
+    <li><strong>Contact details:</strong> your email, and your phone number if you give it.</li>
+    <li><strong>Location:</strong> your postal code and how far you can travel.</li>
+    <li><strong>About the search:</strong> who needs a doctor, an age group, household size, preferred language, how long
+      you have been without a family doctor, whether you have an Ontario health card, and whether you are registered with
+      Health Care Connect.</li>
+    <li><strong>Optional need answers:</strong> yes/no answers about health and access to care, only if you tick them and
+      give separate consent. We never ask for diagnoses or medications.</li>
+    <li><strong>How you heard about us</strong>, if you tell us.</li>
+  </ul>
+  <p>We do not ask for your name or health card number, and we do not store your IP address.</p>
+
+  <h2>Why we use it</h2>
+  <ul>
+    <li>To find family practices within your travel distance that have room for new patients.</li>
+    <li>To email you about openings and about your signup.</li>
+    <li>To decide who hears about an opening first (see below).</li>
+    <li>To count demand by area so we know where to look, using totals that cannot identify you.</li>
+    <li>If you agree, to ask you up to twice how things went after you find a doctor.</li>
+  </ul>
+
+  <h2>Who sees it</h2>
+  <p>We do not share your details with clinics. When a practice tells us it has room, we email you its contact
+    details and you decide whether to contact it. We do not sell your data. Our email and hosting providers process
+    data for us under contract. Your signup data is stored on servers in Canada. Our email provider may process your
+    email address outside Canada in order to deliver messages.</p>
+
+  <h2>How long we keep it</h2>
+  <table>
+    <thead><tr><th>Situation</th><th>What happens</th></tr></thead>
+    <tbody>
+      <tr><td>You do not confirm your email</td><td>Everything is deleted after 7 days.</td></tr>
+      <tr><td>You are on the list</td><td>We keep your details while you are looking. After 11 months with no
+        activity, we email to ask if you are still looking. If you do not answer within 30 days, we delete your contact
+        details.</td></tr>
+      <tr><td>You find a doctor</td><td>We delete your contact details right away, or after 90 days if you agreed to a
+        follow-up.</td></tr>
+      <tr><td>After contact details are deleted</td><td>We keep the first 3 characters of your postal code, your age
+        group, your answers and dates for up to 24 months to measure and improve the service, then delete them. We
+        protect this information as personal information until it is deleted.</td></tr>
+      <tr><td>Totals</td><td>Monthly counts by area, which cannot identify anyone, are kept.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>How we decide who hears first</h2>
+  <p>When a practice has room for a few patients, we tell the people who need care most first. We give points for the
+    health and access answers you choose to share (capped, so no single answer decides), for infants and adults 75 or
+    older, and for how long you have been without a family doctor. Everyone also gains points the longer they wait on
+    our list, so no one is left at the bottom. Ties go to whoever signed up first.</p>
+
+  <h2>Your choices</h2>
+  <ul>
+    <li>Every email we send has a link to update your signup or delete your data right away.</li>
+    <li>You can ask to see or correct the information we hold about you by emailing
+      <a href="mailto:{{ settings.org_contact_email }}">{{ settings.org_contact_email }}</a>.</li>
+    <li>You can withdraw consent at any time. If you withdraw consent to use your need answers, we delete them.</li>
+    <li>If you have a concern we cannot resolve, you can contact the Office of the Privacy Commissioner of Canada.</li>
+  </ul>
+
+  <h2>Contact</h2>
+  <p>{{ settings.org_legal_name }}<br>{{ settings.org_mailing_address }}<br>
+    <a href="mailto:{{ settings.org_contact_email }}">{{ settings.org_contact_email }}</a></p>
+</article>
+{% endblock %}

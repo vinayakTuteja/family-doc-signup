@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Check your email · {{ settings.app_name }}{% endblock %}
+{% block content %}
+<section class="card message">
+  <h1>Check your email</h1>
+  <p>We have sent you a link to confirm your signup. You are not on the list until you click it.</p>
+  <p>Do not see it? Check your spam or junk folder. The link stays valid for 7 days.</p>
+  <p>While you wait, register with
+    <a href="https://www.ontario.ca/page/find-family-doctor-or-nurse-practitioner" rel="noopener">Health Care Connect</a>
+    if you have not already.</p>
+</section>
+{% endblock %}

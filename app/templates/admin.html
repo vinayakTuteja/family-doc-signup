@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Demand dashboard · {{ settings.app_name }}{% endblock %}
+{% macro table(title, rows, col="Count") -%}
+  <section class="card">
+    <h2>{{ title }}</h2>
+    {% if rows %}
+    <table><thead><tr><th>Answer</th><th class="num">{{ col }}</th></tr></thead><tbody>
+      {% for label, value in rows %}<tr><td>{{ label }}</td><td class="num">{{ value }}</td></tr>{% endfor %}
+    </tbody></table>
+    {% else %}<p class="hint">No data yet.</p>{% endif %}
+  </section>
+{%- endmacro %}
+{% block content %}
+<h1>Demand dashboard</h1>
+<p class="hint">Counts only. Counts under {{ settings.min_cell_size }} are shown as &lt;{{ settings.min_cell_size }}.
+  No contact details are shown here. <a href="/admin/export.csv">Download demand by area (CSV)</a></p>
+
+<section class="card">
+  <h2>Totals</h2>
+  <table><tbody>
+    {% for label, value in data.totals.items() %}<tr><td>{{ label }}</td><td class="num">{{ value }}</td></tr>{% endfor %}
+    <tr><td>Active signups who shared need answers</td><td class="num">{{ data.health_consent }}</td></tr>
+  </tbody></table>
+</section>
+
+<div class="grid">
+  {{ table("Active signups by postal prefix", data.by_prefix) }}
+  {{ table("Confirmed signups by week", data.weekly) }}
+  {{ table("Age group", data.age) }}
+  {{ table("Time without a family doctor", data.gap) }}
+  {{ table("Need answers (active, with consent)", data.flags) }}
+  {{ table("Health card", data.ohip) }}
+  {{ table("Registered with Health Care Connect", data.hcc) }}
+  {{ table("Preferred language", data.language) }}
+  {{ table("How they heard about us", data.referral) }}
+</div>
+{% endblock %}

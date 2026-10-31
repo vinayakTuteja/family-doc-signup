@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Your signup · {{ settings.app_name }}{% endblock %}
+{% block content %}
+<section class="card message">
+  <h1>Your signup</h1>
+  {% if request.query_params.get("done") == "keep" %}
+  <p class="success banner">Thanks. You are still on the list.</p>
+  {% endif %}
+
+  {% if profile %}
+  <dl class="summary">
+    <dt>Email</dt><dd>{{ contact.email }}</dd>
+    <dt>Area</dt><dd>{{ profile.postal_prefix }}, within {{ profile.radius_km }} km</dd>
+    <dt>Status</dt><dd>{% if profile.status == "active" %}On the list{% elif profile.status == "pending" %}Waiting for you to confirm your email{% elif profile.status == "connected" %}Found a doctor{% else %}{{ profile.status }}{% endif %}</dd>
+  </dl>
+  {% endif %}
+
+  {% if profile and profile.status == "active" %}
+  <form method="post" action="/manage/{{ token }}/keep" class="inline-action">
+    <button type="submit" class="button">I am still looking</button>
+  </form>
+  <form method="post" action="/manage/{{ token }}/connected" class="inline-action">
+    <button type="submit" class="button secondary">I found a family doctor</button>
+  </form>
+  {% endif %}
+
+  <h2>Delete your data</h2>
+  <p>This deletes your email, phone number and answers right away. You will not hear from us again.</p>
+  <form method="post" action="/manage/{{ token }}/delete">
+    <button type="submit" class="button danger">Delete my data</button>
+  </form>
+  <p class="hint">To change your postal code or other answers, delete your data and sign up again, or email
+    <a href="mailto:{{ settings.org_contact_email }}">{{ settings.org_contact_email }}</a>.</p>
+</section>
+{% endblock %}

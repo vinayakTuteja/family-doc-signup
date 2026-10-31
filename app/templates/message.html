@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} · {{ settings.app_name }}{% endblock %}
+{% block content %}
+<section class="card message">
+  <h1>{{ title }}</h1>
+  <p>{{ body }}</p>
+  {% if show_hcc %}
+  <p><a href="https://www.ontario.ca/page/find-family-doctor-or-nurse-practitioner" rel="noopener">Register with Health Care Connect</a></p>
+  {% endif %}
+  <p><a href="/">Back to home</a></p>
+</section>
+{% endblock %}
