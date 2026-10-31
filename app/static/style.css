@@ -124,3 +124,5 @@ th { color: var(--muted); font-weight: 600; }
   h1 { font-size: 1.7rem; }
   .card { padding: 18px; }
 }
+
+.email-body { white-space: pre-wrap; word-break: break-word; font-family: inherit; font-size: 0.95rem; margin: 0; }

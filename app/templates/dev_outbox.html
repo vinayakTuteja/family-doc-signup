@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Test inbox · {{ settings.app_name }}{% endblock %}
+{% block content %}
+<h1>Test inbox</h1>
+<p class="note">Local testing only. These emails were saved instead of sent. Newest first. Refresh after each step.</p>
+{% for m in messages %}
+<section class="card">
+  <h2>{{ m.subject }}</h2>
+  <p class="hint">To: {{ m.to }}</p>
+  <pre class="email-body">{{ m.body | safe }}</pre>
+</section>
+{% else %}
+<p class="hint">No emails yet. Sign up on the <a href="/">home page</a> first.</p>
+{% endfor %}
+{% endblock %}

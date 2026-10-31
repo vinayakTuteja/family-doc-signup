@@ -45,6 +45,9 @@ class Settings:
     # Run the daily retention job inside the web server. Turn off if you schedule scripts/retention.py instead.
     run_retention_in_app: bool = field(default_factory=lambda: _bool("RUN_RETENTION_IN_APP", True))
 
+    # Local testing only: shows saved emails at /dev/outbox. Never turn on in production.
+    dev_mode: bool = field(default_factory=lambda: _bool("DEV_MODE", False))
+
     # Version of the consent wording shown on the form. Bump it whenever the wording changes.
     consent_version: str = field(default_factory=lambda: os.getenv("CONSENT_VERSION", "2026-11-v1"))
 

@@ -2,6 +2,10 @@
 
 import asyncio
 import csv
+import email as email_lib
+import glob
+import html as html_lib
+import os
 import io
 import logging
 import re
@@ -444,3 +448,28 @@ def admin_export():
     stamp = datetime.now(timezone.utc).strftime("%Y%m%d")
     return Response(buffer.getvalue(), media_type="text/csv",
                     headers={"Content-Disposition": f'attachment; filename="demand-{stamp}.csv"'})
+
+
+# ---------------------------------------------------------------- local testing
+
+
+URL_RE = re.compile(r"(https?://[^\s<>\"]+)")
+
+
+@app.get("/dev/outbox", response_class=HTMLResponse)
+def dev_outbox(request: Request):
+    """Shows emails saved by the console backend so you can click their links. Local testing only."""
+    if not (settings.dev_mode and settings.email_backend == "console"):
+        raise HTTPException(status_code=404)
+    messages = []
+    for path in sorted(glob.glob(os.path.join(settings.outbox_dir, "*.eml")), reverse=True)[:50]:
+        with open(path, "rb") as f:
+            msg = email_lib.message_from_bytes(f.read())
+        text = ""
+        for part in msg.walk():
+            if part.get_content_type() == "text/plain":
+                text = part.get_payload(decode=True).decode()
+                break
+        linked = URL_RE.sub(r'<a href="\1">\1</a>', html_lib.escape(text, quote=False))
+        messages.append({"to": msg["To"], "subject": msg["Subject"], "body": linked})
+    return render(request, "dev_outbox.html", messages=messages)

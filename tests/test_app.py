@@ -288,3 +288,12 @@ def test_priority_score_rules():
         {"id": "late_healthy", "need_flags": set(), "age_band": "18_64", "time_without_doctor": "lt_6m", "verified_at": now},
     ], now)
     assert [c["id"] for c in ranked] == ["late_infant", "early_healthy", "late_healthy"]
+
+
+def test_dev_outbox_only_in_dev_mode(client, monkeypatch):
+    signup(client)
+    assert client.get("/dev/outbox").status_code == 404
+    monkeypatch.setattr(settings, "dev_mode", True)
+    r = client.get("/dev/outbox")
+    assert r.status_code == 200
+    assert "Confirm your email" in r.text and '<a href="http://localhost:8000/verify/' in r.text

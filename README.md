@@ -36,21 +36,19 @@ a practice has room.
 
 ## Run it on your computer
 
-You need Python 3.12 or newer.
+You need Python 3.12 or newer (https://www.python.org/downloads/).
 
-```bash
-python -m venv .venv
-source .venv/bin/activate          # Windows: .venv\Scripts\activate
-pip install -r requirements-dev.txt
-cp .env.example .env                # then edit .env
-export $(grep -v '^#' .env | xargs) # Windows: set the variables manually
-uvicorn app.main:app --reload
-```
+- **Mac:** open Terminal in this folder and run `./run_local.sh`
+- **Windows:** double-click `run_local.bat`
 
-Open http://localhost:8000. With `EMAIL_BACKEND=console`, emails are saved as `.eml` files in
-`data/outbox/` instead of being sent; open one to click the confirmation link.
+Then open:
 
-Run the tests with `pytest -q`.
+- http://localhost:8000 for the site
+- http://localhost:8000/dev/outbox for a test inbox (emails are saved there, not sent)
+- http://localhost:8000/admin for the dashboard (user `admin`, password `dev`)
+
+Test data is stored in `data/local.db`. Delete the `data` folder to start fresh.
+Run the automated tests with `pip install -r requirements-dev.txt` and then `pytest -q`.
 
 ## Put it online (Fly.io, Toronto region)
 
