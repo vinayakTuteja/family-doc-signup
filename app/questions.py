@@ -4,18 +4,22 @@ The form, server-side validation, the admin dashboard and the priority score all
 from these definitions, so changing a question here changes it everywhere.
 """
 
-RADIUS_OPTIONS = [
-    ("2", "Within 2 km"),
-    ("5", "Within 5 km"),
-    ("10", "Within 10 km"),
-    ("25", "Within 25 km"),
-]
+RADIUS_MIN_KM = 1
+RADIUS_MAX_KM = 25
+RADIUS_DEFAULT_KM = 5
+RADIUS_TICKS = [1, 5, 10, 15, 20, 25]
 
 FOR_WHOM_OPTIONS = [
     ("self", "Myself"),
     ("child", "My child"),
     ("household", "Me and my family"),
     ("someone_i_care_for", "Someone I care for"),
+]
+
+SPLIT_OPTIONS = [
+    ("yes", "Yes, take the spots for some of us now and keep looking for the rest"),
+    ("no", "No, we need a practice that can take all of us"),
+    ("single", "I am only signing up one person"),
 ]
 
 AGE_BAND_OPTIONS = [
@@ -82,17 +86,22 @@ REFERRAL_OPTIONS = [
 # Optional need questions. Stored only if the person ticks the separate health consent box.
 # "group" controls how they are shown and how they are capped in the priority score.
 NEED_FLAGS = [
-    ("ongoing_condition", "clinical", "An ongoing health condition that needs regular care or prescriptions (for example diabetes, heart disease or asthma)"),
-    ("immunocompromised", "clinical", "A weakened immune system (for example from cancer treatment, a transplant or a medical condition)"),
+    ("ongoing_condition", "clinical", "An ongoing health condition that needs regular care (e.g. diabetes, heart disease, COPD, kidney disease etc.)"),
+    ("multiple_meds", "clinical", "3 or more regular prescriptions, or medication that needs blood tests or dose changes (e.g. insulin, blood thinners etc.)"),
+    ("immunocompromised", "clinical", "A weakened immune system (e.g. from cancer treatment, a transplant, an autoimmune condition etc.)"),
     ("pregnancy", "clinical", "Pregnant, or gave birth in the last 12 months"),
-    ("mental_health", "clinical", "A mental health condition that needs ongoing follow-up"),
-    ("recent_hospital", "clinical", "A hospital stay, or 2 or more emergency room visits, in the last 12 months"),
-    ("serious_illness", "clinical", "A serious or life-limiting illness"),
-    ("newcomer", "access", "Arrived in Canada in the last 3 years, including as a refugee"),
-    ("disability", "access", "A disability that makes getting care harder"),
+    ("mental_health", "clinical", "A mental health condition that needs ongoing care (e.g. depression or anxiety that affects daily life, bipolar disorder etc.)"),
+    ("recent_hospital", "clinical", "A hospital stay, surgery, or 2 or more emergency room visits in the last 12 months"),
+    ("needs_followup", "clinical", "A new diagnosis or test result that needs follow-up, with no one to follow up with"),
+    ("serious_illness", "clinical", "A serious or life-limiting illness (e.g. cancer, advanced heart or lung disease etc.)"),
+    ("newcomer", "access", "Arrived in Canada in the last 3 years (e.g. as an immigrant, refugee, international student etc.)"),
+    ("disability", "access", "A disability or frailty that makes getting care harder (e.g. limited mobility, hearing or vision loss etc.)"),
     ("language_barrier", "access", "Need care in a language other than English or French"),
     ("no_transport", "access", "No reliable way to get to appointments"),
+    ("no_alternative_care", "access", "No walk-in clinic or virtual care you can realistically use (e.g. none nearby, hours do not fit your work, cannot pay virtual care fees etc.)"),
+    ("limited_support", "access", "Live alone and need help managing health, or care for someone with high needs"),
     ("unstable_housing", "access", "Unstable housing, or at risk of losing housing"),
+    ("financial_hardship", "access", "Trouble affording basics (e.g. food, rent, medications etc.)"),
 ]
 
 NEED_FLAG_KEYS = {key for key, _, _ in NEED_FLAGS}

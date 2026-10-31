@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenPanel signup preview</title>
+<style>
+/*CSS*/
+
+.preview-bar { background: #20302a; color: #f1f5f2; font-size: 0.85rem; }
+.preview-bar .container { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: center; padding-top: 10px; padding-bottom: 10px; }
+.preview-bar strong { color: #f2c94c; }
+.preview-bar button { background: none; border: 1px solid #5d7268; color: #f1f5f2; border-radius: 6px; padding: 4px 10px; font: inherit; cursor: pointer; }
+.preview-bar button:hover, .preview-bar button.active { background: #34493f; }
+.view[hidden] { display: none; }
+.badge { display: inline-block; min-width: 1.4em; padding: 0 6px; margin-left: 4px; border-radius: 10px; background: #f2c94c; color: #20302a; font-weight: 700; text-align: center; }
+.email-card .email-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+.linklike { background: none; border: 0; padding: 0; font: inherit; color: var(--accent); text-decoration: underline; cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="preview-bar">
+  <div class="container">
+    <span><strong>Preview</strong> · nothing you enter is saved or sent</span>
+    <button data-go="home">Signup page</button>
+    <button data-go="inbox">Test inbox<span class="badge" id="inbox-count">0</span></button>
+    <button data-go="admin">Admin dashboard</button>
+    <button data-go="privacy-notice">Privacy notice</button>
+    <button id="reset">Reset</button>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="container header-row">
+    <a class="brand" href="#home"><span class="brand-mark" aria-hidden="true"></span>OpenPanel</a>
+    <nav class="nav" aria-label="Main">
+      <a href="#how">How it works</a>
+      <a href="#privacy">Privacy</a>
+      <a class="nav-cta" href="#signup">Sign up free</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <div class="view" id="view-home"><!--HOME--></div>
+
+  <div class="view" id="view-thanks" hidden><div class="container narrow page-body">
+    <section class="card message">
+      <h1>Check your email</h1>
+      <p>We have sent you a link to confirm your signup. You are not on the list until you click it.</p>
+      <p>Do not see it? Check your spam or junk folder. The link stays valid for 7 days.</p>
+      <p>While you wait, register with
+        <a href="https://www.ontario.ca/page/find-family-doctor-or-nurse-practitioner" target="_blank" rel="noopener">Health Care Connect</a>
+        if you have not already.</p>
+      <p class="note">Preview: open the <button class="linklike" data-go="inbox">test inbox</button> to see the email this person would get.</p>
+    </section>
+  </div></div>
+
+  <div class="view" id="view-inbox" hidden><div class="container narrow page-body">
+    <h1>Test inbox</h1>
+    <p class="note">In the real site these go to the person's email. Newest first.</p>
+    <div id="inbox-list"></div>
+  </div></div>
+
+  <div class="view" id="view-confirm" hidden><div class="container narrow page-body">
+    <section class="card message">
+      <h1>Confirm your email</h1>
+      <p>Click the button to confirm your email and join the list.</p>
+      <button class="button" id="confirm-btn">Confirm my email</button>
+    </section>
+  </div></div>
+
+  <div class="view" id="view-message" hidden><div class="container narrow page-body">
+    <section class="card message">
+      <h1 id="msg-title"></h1>
+      <p id="msg-body"></p>
+      <p id="msg-hcc" hidden><a href="https://www.ontario.ca/page/find-family-doctor-or-nurse-practitioner" target="_blank" rel="noopener">Register with Health Care Connect</a></p>
+      <p><a href="#home">Back to home</a></p>
+    </section>
+  </div></div>
+
+  <div class="view" id="view-manage" hidden><div class="container narrow page-body">
+    <section class="card message">
+      <h1>Your signup</h1>
+      <p class="success banner" id="manage-done" hidden>Thanks. You are still on the list.</p>
+      <dl class="summary" id="manage-summary"></dl>
+      <div id="manage-active-actions">
+        <button class="button inline-action" id="keep-btn">I am still looking</button>
+        <button class="button secondary inline-action" id="connected-btn">I found a family doctor</button>
+      </div>
+      <h2>Delete your data</h2>
+      <p>This deletes your email, phone number and answers right away. You will not hear from us again.</p>
+      <button class="button danger" id="delete-btn">Delete my data</button>
+    </section>
+  </div></div>
+
+  <div class="view" id="view-privacy-notice" hidden><!--PRIVACY--></div>
+
+  <div class="view" id="view-admin" hidden><div class="container page-body">
+    <h1>Demand dashboard</h1>
+    <p class="hint">Counts only. Counts under 5 are shown as &lt;5. No contact details are shown here.</p>
+    <div id="admin-body"></div>
+  </div></div>
+</main>
+
+<footer class="site-footer"><!--FOOTER--></footer>
+
+<script>
+(function () {
+  const POSTAL_RE = /^[KLMNP][0-9][ABCEGHJ-NPRSTV-Z] ?[0-9][ABCEGHJ-NPRSTV-Z][0-9]$/;
+  const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+  const MIN_CELL = 5;
+  const HASH_VIEWS = ["home", "privacy-notice", "admin", "inbox"];
+
+  let signups = [];
+  let emails = [];
+  let current = null; // signup being confirmed or managed
+
+  const form = document.getElementById("signup-form");
+  const $ = (sel, root) => (root || document).querySelector(sel);
+  const $$ = (sel, root) => Array.from((root || document).querySelectorAll(sel));
+
+  function show(name) {
+    $$(".view").forEach(v => v.hidden = v.id !== "view-" + name);
+    $$(".preview-bar button[data-go]").forEach(b => b.classList.toggle("active", b.dataset.go === name));
+    if (name === "inbox") renderInbox();
+    if (name === "admin") renderAdmin();
+    if (HASH_VIEWS.includes(name) && location.hash !== "#" + name) {
+      history.replaceState(null, "", "#" + name);
+    }
+    window.scrollTo(0, 0);
+  }
+
+  function message(title, body, hcc) {
+    $("#msg-title").textContent = title;
+    $("#msg-body").textContent = body;
+    $("#msg-hcc").hidden = !hcc;
+    show("message");
+  }
+
+  function labelFor(name, value) {
+    const input = $(`input[name="${name}"][value="${value}"]`);
+    if (input) return input.parentElement.querySelector("span").textContent.trim();
+    const opt = $(`select[name="${name}"] option[value="${value}"]`);
+    return opt ? opt.textContent.trim() : value;
+  }
+
+  // ---------------------------------------------------------------- form
+
+  function clearErrors() {
+    $$(".error", form).forEach(e => e.remove());
+    $$(".has-error", form).forEach(e => e.classList.remove("has-error"));
+  }
+
+  function addError(fieldEl, text) {
+    const container = fieldEl.closest(".field");
+    container.classList.add("has-error");
+    const p = document.createElement("p");
+    p.className = "error";
+    p.textContent = text;
+    const anchor = container.querySelector("legend, label");
+    const hint = container.querySelector(".hint");
+    (hint || anchor).insertAdjacentElement("afterend", p);
+  }
+
+  function radio(name) {
+    const el = $(`input[name="${name}"]:checked`, form);
+    return el ? el.value : "";
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    clearErrors();
+    const errors = [];
+    const err = (el, msg) => { errors.push(msg); addError(el, msg); };
+
+    const email = form.email.value.trim().toLowerCase();
+    if (!EMAIL_RE.test(email)) err(form.email, "Enter a valid email address.");
+
+    let phone = form.phone.value.trim();
+    if (phone) {
+      let d = phone.replace(/\D/g, "");
+      if (d.length === 11 && d[0] === "1") d = d.slice(1);
+      if (d.length !== 10) err(form.phone, "Enter a 10-digit phone number, or leave it blank.");
+      else phone = `${d.slice(0, 3)}-${d.slice(3, 6)}-${d.slice(6)}`;
+    }
+
+    let postal = form.postal_code.value.replace(/\s+/g, "").toUpperCase();
+    if (postal.length === 6) postal = postal.slice(0, 3) + " " + postal.slice(3);
+    if (!POSTAL_RE.test(postal)) err(form.postal_code, "Enter an Ontario postal code, for example M5V 3L9.");
+
+    const radius = parseInt(form.radius_km.value, 10);
+    if (!(radius >= 1 && radius <= 25)) err(form.radius_km, "Choose a distance from 1 to 25 km.");
+
+    const required = {
+      for_whom: "Tell us who you are looking for.",
+      split_household: "Choose an option.",
+      age_band: "Choose the age of the person who needs a doctor.",
+      time_without_doctor: "Choose how long it has been.",
+      ohip_status: "Tell us about your health card.",
+      hcc_registered: "Choose an option.",
+    };
+    const answers = {};
+    for (const [name, msg] of Object.entries(required)) {
+      answers[name] = radio(name);
+      if (!answers[name]) err($(`input[name="${name}"]`, form), msg);
+    }
+
+    const household = form.household_size.value.trim();
+    if (household && !(/^\d+$/.test(household) && +household >= 1 && +household <= 12)) {
+      err(form.household_size, "Enter a number from 1 to 12, or leave it blank.");
+    }
+
+    const flags = $$('input[name="need_flags"]:checked', form).map(i => i.value);
+    const healthConsent = form.health_consent.checked;
+    if (flags.length && !healthConsent) {
+      err(form.health_consent, "Tick this box to let us use the health and access answers you chose, or untick those answers.");
+    }
+    if (!form.service_consent.checked) {
+      err(form.service_consent, "We need your consent to use your details for this service.");
+    }
+
+    let banner = $(".error.banner", form);
+    if (errors.length) {
+      if (!banner) {
+        banner = document.createElement("p");
+        banner.className = "error banner";
+        form.prepend(banner);
+      }
+      banner.textContent = "Please fix the highlighted answers below.";
+      banner.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+    if (banner) banner.remove();
+
+    const existing = signups.find(s => s.email === email);
+    if (existing) {
+      addEmail(existing, existing.status === "pending" ? "verify" : "already");
+    } else {
+      const s = {
+        id: Math.random().toString(36).slice(2),
+        email, phone, postal, prefix: postal.slice(0, 3),
+        radius, ...answers,
+        language: form.language.value, referral: form.referral_source.value,
+        flags: healthConsent ? flags : [], feedback: form.feedback_consent.checked,
+        status: "pending", created: new Date(),
+      };
+      signups.push(s);
+      addEmail(s, "verify");
+    }
+    form.reset();
+    updateRadius();
+    show("thanks");
+  });
+
+  // ---------------------------------------------------------------- emails
+
+  function addEmail(signup, kind) {
+    const subjects = {
+      verify: "Confirm your email for OpenPanel",
+      already: "You are already signed up with OpenPanel",
+    };
+    const bodies = {
+      verify: "Thanks for signing up with OpenPanel.\n\nPlease confirm your email so we can start looking for a family doctor near you.\n\nIf you did not sign up, ignore this email and your details will be deleted within 7 days.\n\nWhile you wait, please also register with Health Care Connect, Ontario's free matching service.",
+      already: "Someone tried to sign up for OpenPanel with this email, which is already on our list.\n\nIf it was you, you can update your details or remove yourself using the link below. If it was not you, you can ignore this email.",
+    };
+    emails.unshift({ signupId: signup.id, to: signup.email, kind, subject: subjects[kind], body: bodies[kind] });
+    $("#inbox-count").textContent = emails.length;
+  }
+
+  function renderInbox() {
+    const list = $("#inbox-list");
+    list.innerHTML = "";
+    if (!emails.length) {
+      list.innerHTML = '<p class="hint">No emails yet. Sign up on the signup page first.</p>';
+      return;
+    }
+    emails.forEach(m => {
+      const card = document.createElement("section");
+      card.className = "card email-card";
+      const h = document.createElement("h2"); h.textContent = m.subject;
+      const to = document.createElement("p"); to.className = "hint"; to.textContent = "To: " + m.to;
+      const body = document.createElement("pre"); body.className = "email-body"; body.textContent = m.body;
+      const actions = document.createElement("div"); actions.className = "email-actions";
+      if (m.kind === "verify") {
+        const b = document.createElement("button"); b.className = "button"; b.textContent = "Confirm my email";
+        b.onclick = () => openConfirm(m.signupId); actions.append(b);
+      }
+      const manage = document.createElement("button"); manage.className = "linklike";
+      manage.textContent = "Change your details, stop emails or delete your data";
+      manage.onclick = () => openManage(m.signupId);
+      const foot = document.createElement("p"); foot.className = "hint";
+      foot.textContent = "OpenPanel (working name) · Mailing address to be added, Toronto, ON · privacy@example.com";
+      card.append(h, to, body, actions, foot, manage);
+      list.append(card);
+    });
+  }
+
+  function find(id) { return signups.find(s => s.id === id); }
+
+  function expired() {
+    message("This link has expired", "This link is no longer valid. If you already confirmed, you are all set.");
+  }
+
+  function openConfirm(id) {
+    const s = find(id);
+    if (!s || s.status !== "pending") return expired();
+    current = s;
+    show("confirm");
+  }
+
+  $("#confirm-btn").addEventListener("click", () => {
+    if (!current) return expired();
+    current.status = "active";
+    current.verified = new Date();
+    message("You are on the list",
+      "Thanks for confirming. We will email you when a family practice near you tells us it has room. Please also register with Health Care Connect if you have not already.", true);
+  });
+
+  function openManage(id) {
+    const s = find(id);
+    if (!s) return expired();
+    current = s;
+    const statusText = { active: "On the list", pending: "Waiting for you to confirm your email", connected: "Found a doctor" }[s.status] || s.status;
+    $("#manage-summary").innerHTML = "";
+    [["Email", s.email], ["Area", `${s.prefix}, within ${s.radius} km`], ["Status", statusText]].forEach(([k, v]) => {
+      const dt = document.createElement("dt"); dt.textContent = k;
+      const dd = document.createElement("dd"); dd.textContent = v;
+      $("#manage-summary").append(dt, dd);
+    });
+    $("#manage-active-actions").hidden = s.status !== "active";
+    $("#manage-done").hidden = true;
+    show("manage");
+  }
+
+  $("#keep-btn").addEventListener("click", () => { $("#manage-done").hidden = false; });
+
+  $("#connected-btn").addEventListener("click", () => {
+    if (current.feedback) current.status = "connected";
+    else { current.status = "deidentified"; current.email = null; }
+    message("Congratulations", "We are glad you found a family doctor. We have taken you off the list and will not email you about openings.");
+  });
+
+  $("#delete-btn").addEventListener("click", () => {
+    signups = signups.filter(s => s !== current);
+    emails = emails.filter(m => m.signupId !== current.id);
+    $("#inbox-count").textContent = emails.length;
+    current = null;
+    message("Your data has been deleted", "We have deleted your email, phone number and answers. You will not hear from us again.");
+  });
+
+  // ---------------------------------------------------------------- admin
+
+  function suppress(n) { return n > 0 && n < MIN_CELL ? "<" + MIN_CELL : String(n); }
+
+  function table(title, rows) {
+    const sec = document.createElement("section");
+    sec.className = "card";
+    const h = document.createElement("h2"); h.textContent = title; sec.append(h);
+    if (!rows.length) { const p = document.createElement("p"); p.className = "hint"; p.textContent = "No data yet."; sec.append(p); return sec; }
+    const t = document.createElement("table");
+    t.innerHTML = '<thead><tr><th>Answer</th><th class="num">Count</th></tr></thead>';
+    const tb = document.createElement("tbody");
+    rows.forEach(([label, n]) => {
+      const tr = document.createElement("tr");
+      const a = document.createElement("td"); a.textContent = label;
+      const b = document.createElement("td"); b.className = "num"; b.textContent = n;
+      tr.append(a, b); tb.append(tr);
+    });
+    t.append(tb); sec.append(t);
+    return sec;
+  }
+
+  function countBy(list, fn) {
+    const m = new Map();
+    list.forEach(x => [].concat(fn(x)).filter(Boolean).forEach(k => m.set(k, (m.get(k) || 0) + 1)));
+    return [...m.entries()].sort((a, b) => b[1] - a[1]);
+  }
+
+  function renderAdmin() {
+    const body = $("#admin-body");
+    body.innerHTML = "";
+    const active = signups.filter(s => s.status === "active");
+    body.append(table("Totals", [
+      ["Active (confirmed, still looking)", String(active.length)],
+      ["Waiting for email confirmation", String(signups.filter(s => s.status === "pending").length)],
+      ["Connected", String(signups.filter(s => s.status === "connected").length)],
+      ["De-identified", String(signups.filter(s => s.status === "deidentified").length)],
+    ]));
+    const grid = document.createElement("div"); grid.className = "grid";
+    const flagLabel = v => $(`input[name="need_flags"][value="${v}"]`).parentElement.querySelector("span").textContent.trim();
+    const sections = [
+      ["Active signups by postal prefix", countBy(active, s => s.prefix)],
+      ["Age group", countBy(active, s => labelFor("age_band", s.age_band))],
+      ["Would split a household", countBy(active, s => labelFor("split_household", s.split_household))],
+      ["Time without a family doctor", countBy(active, s => labelFor("time_without_doctor", s.time_without_doctor))],
+      ["Need answers (active, with consent)", countBy(active, s => s.flags.map(flagLabel))],
+      ["Health card", countBy(active, s => labelFor("ohip_status", s.ohip_status))],
+      ["Registered with Health Care Connect", countBy(active, s => labelFor("hcc_registered", s.hcc_registered))],
+      ["Preferred language", countBy(active, s => s.language && labelFor("language", s.language))],
+      ["How they heard about us", countBy(active, s => s.referral && labelFor("referral_source", s.referral))],
+    ];
+    sections.forEach(([title, rows]) => grid.append(table(title, rows.map(([k, n]) => [k, suppress(n)]))));
+    body.append(grid);
+  }
+
+  // ---------------------------------------------------------------- navigation
+
+  const range = form.radius_km;
+  const radiusOut = document.getElementById("radius-value");
+  function updateRadius() {
+    radiusOut.textContent = range.value + " km";
+    range.style.setProperty("--fill", ((range.value - range.min) / (range.max - range.min)) * 100 + "%");
+  }
+  range.addEventListener("input", updateRadius);
+  updateRadius();
+
+  $$("[data-go]").forEach(b => b.addEventListener("click", () => show(b.dataset.go)));
+  $("#reset").addEventListener("click", () => {
+    signups = []; emails = []; current = null;
+    $("#inbox-count").textContent = "0";
+    form.reset(); clearErrors(); updateRadius();
+    const banner = $(".error.banner", form); if (banner) banner.remove();
+    show("home");
+  });
+
+  function route() {
+    const name = location.hash.slice(1);
+    if (HASH_VIEWS.includes(name)) return show(name);
+    const anchor = name && document.getElementById(name);
+    if (anchor && anchor.closest("#view-home")) {
+      $$(".view").forEach(v => v.hidden = v.id !== "view-home");
+      $$(".preview-bar button[data-go]").forEach(b => b.classList.toggle("active", b.dataset.go === "home"));
+      anchor.scrollIntoView({ block: "start" });
+      return;
+    }
+    show("home");
+  }
+  window.addEventListener("hashchange", route);
+  route();
+})();
+</script>
+</body>
+</html>

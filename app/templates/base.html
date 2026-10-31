@@ -3,30 +3,40 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}{{ settings.app_name }}{% endblock %}</title>
-  <meta name="description" content="Free help finding a family doctor near you in Ontario.">
+  <title>{% block title %}{{ settings.app_name }} · Find a family doctor near you{% endblock %}</title>
+  <meta name="description" content="Free help finding a family doctor near you in Ontario. Sign up once and we reach out to practices for you.">
+  <meta name="theme-color" content="#0b3b2e">
   <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/app.js" defer></script>
 </head>
-<body>
+<body class="{% block body_class %}page{% endblock %}">
   <a class="skip" href="#main">Skip to content</a>
   <header class="site-header">
-    <div class="wrap header-row">
-      <a class="brand" href="/">{{ settings.app_name }}</a>
-      <span class="tag">Free · Ontario · Starting in Toronto</span>
+    <div class="container header-row">
+      <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"></span>{{ settings.app_name }}</a>
+      <nav class="nav" aria-label="Main">
+        <a href="/#how">How it works</a>
+        <a href="/#privacy">Privacy</a>
+        <a class="nav-cta" href="/#signup">Sign up free</a>
+      </nav>
     </div>
   </header>
 
-  <main id="main" class="wrap">
-    {% block content %}{% endblock %}
+  <main id="main">
+    {% block page %}<div class="container narrow page-body">{% block content %}{% endblock %}</div>{% endblock %}
   </main>
 
   <footer class="site-footer">
-    <div class="wrap">
-      <p><strong>Not for emergencies.</strong> Call 911 in an emergency. For health advice, call Health811 (dial 811).</p>
-      <p>{{ settings.app_name }} is an independent, free service. It is not affiliated with the Government of Ontario,
-        Ontario Health or Health Care Connect.</p>
-      <p><a href="/privacy">Privacy notice</a> · {{ settings.org_legal_name }} · {{ settings.org_mailing_address }} ·
-        <a href="mailto:{{ settings.org_contact_email }}">{{ settings.org_contact_email }}</a></p>
+    <div class="container footer-grid">
+      <div>
+        <p class="footer-brand"><span class="brand-mark" aria-hidden="true"></span>{{ settings.app_name }}</p>
+        <p>A free, independent service. Not affiliated with the Government of Ontario, Ontario Health or Health Care Connect.</p>
+      </div>
+      <div>
+        <p><strong>Not for emergencies.</strong> Call 911 in an emergency. For health advice, call Health811 (dial 811).</p>
+        <p><a href="/privacy">Privacy notice</a> · {{ settings.org_legal_name }} · {{ settings.org_mailing_address }} ·
+          <a href="mailto:{{ settings.org_contact_email }}">{{ settings.org_contact_email }}</a></p>
+      </div>
     </div>
   </footer>
 </body>

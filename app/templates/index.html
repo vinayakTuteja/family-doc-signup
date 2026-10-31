@@ -1,13 +1,14 @@
 {% extends "base.html" %}
+{% block body_class %}home{% endblock %}
 {% macro err(name) -%}
   {% if errors.get(name) %}<p class="error" id="{{ name }}-error">{{ errors[name] }}</p>{% endif %}
 {%- endmacro %}
-{% macro radio_group(name, options, legend, hint=None) -%}
+{% macro radio_group(name, options, legend, hint=None, layout="tiles") -%}
   <fieldset class="field {% if errors.get(name) %}has-error{% endif %}">
     <legend>{{ legend }}</legend>
     {% if hint %}<p class="hint">{{ hint }}</p>{% endif %}
     {{ err(name) }}
-    <div class="choices">
+    <div class="choices {{ layout }}">
     {% for key, label in options %}
       <label class="choice"><input type="radio" name="{{ name }}" value="{{ key }}" {% if values.get(name) == key %}checked{% endif %}> <span>{{ label }}</span></label>
     {% endfor %}
@@ -15,133 +16,259 @@
   </fieldset>
 {%- endmacro %}
 
-{% block content %}
+{% block page %}
 <section class="hero">
-  <h1>Find a family doctor near you</h1>
-  <p class="lede">Tell us where you live and how far you can travel. We check with family practices in your area and
-    email you when one tells us it has room for new patients.</p>
-  <ol class="steps">
-    <li><strong>Sign up</strong> in about 3 minutes. It is free.</li>
-    <li><strong>We ask nearby practices</strong> whether they are taking new patients.</li>
-    <li><strong>We email you</strong> when one has room, with how to contact them.</li>
-  </ol>
-  <p class="note">We are starting in Toronto and cannot promise a match. Please also register with
-    <a href="https://www.ontario.ca/page/find-family-doctor-or-nurse-practitioner" rel="noopener">Health Care Connect</a>,
-    Ontario's free matching service. Using both is fine.</p>
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow">Free · Ontario · Starting in Toronto</p>
+      <h1>Finding a family doctor should not be a second job.</h1>
+      <p class="lede">Sign up once. We reach out to family practices near you, within a distance you choose, and email
+        you when one has room for new patients.</p>
+      <div class="hero-actions">
+        <a class="button light" href="#signup">Sign up free</a>
+        <a class="button ghost" href="#how">How it works</a>
+      </div>
+    </div>
+    <aside class="hero-stat" aria-label="Why this matters">
+      <p class="stat-number">1.9M</p>
+      <p class="stat-label">people in Ontario want a family doctor and do not have one.</p>
+      <p class="stat-source">Government of Ontario, Budget 2026</p>
+    </aside>
+  </div>
 </section>
 
-<form class="signup" method="post" action="/signup" novalidate>
-  {% if errors.get("form") %}<p class="error banner">{{ errors["form"] }}</p>{% elif errors %}
-  <p class="error banner">Please fix the highlighted answers below.</p>{% endif %}
-
-  <div class="hp" aria-hidden="true">
-    <label>Leave this empty <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+<section class="section" id="privacy">
+  <div class="container">
+    <p class="section-eyebrow">Your privacy</p>
+    <h2 class="section-title">We ask for as little as possible.</h2>
+    <p class="section-lede">Here is exactly what we collect, what we never collect, and who sees it.</p>
+    <div class="card-grid three">
+      <article class="feature-card">
+        <span class="icon-dot ok" aria-hidden="true"></span>
+        <h3>What we ask for</h3>
+        <ul>
+          <li>Your email (phone is optional)</li>
+          <li>Your postal code and how far you can travel</li>
+          <li>A few multiple-choice questions</li>
+          <li>Optional yes/no questions about need, only with your consent</li>
+        </ul>
+      </article>
+      <article class="feature-card">
+        <span class="icon-dot no" aria-hidden="true"></span>
+        <h3>What we never ask for</h3>
+        <ul>
+          <li>Your name</li>
+          <li>Your health card number</li>
+          <li>Diagnoses, medications or medical records</li>
+        </ul>
+      </article>
+      <article class="feature-card">
+        <span class="icon-dot shield" aria-hidden="true"></span>
+        <h3>Who sees it</h3>
+        <ul>
+          <li>No clinic sees your details. You contact them yourself.</li>
+          <li>We never sell your data.</li>
+          <li>Stored on servers in Canada.</li>
+          <li>Delete everything with one click, any time.</li>
+        </ul>
+      </article>
+    </div>
+    <p class="section-link"><a href="/privacy">Read the full privacy notice</a></p>
   </div>
+</section>
 
-  <section class="card">
-    <h2>1. How to reach you</h2>
-    <div class="field {% if errors.get('email') %}has-error{% endif %}">
-      <label for="email">Email</label>
-      {{ err("email") }}
-      <input id="email" name="email" type="email" autocomplete="email" required value="{{ values.get('email', '') }}">
+<section class="section tinted" id="why">
+  <div class="container split">
+    <div>
+      <p class="section-eyebrow">Free for everyone</p>
+      <h2 class="section-title">No fees. No paying to get ahead.</h2>
+      <p class="section-lede">There is no premium tier and nothing to buy. Everyone in an area hears about openings by
+        the same published rules, with people who need care most told first.</p>
     </div>
-    <div class="field {% if errors.get('phone') %}has-error{% endif %}">
-      <label for="phone">Phone <span class="optional">(optional)</span></label>
-      <p class="hint">Only used if we cannot reach you by email.</p>
-      {{ err("phone") }}
-      <input id="phone" name="phone" type="tel" autocomplete="tel" value="{{ values.get('phone', '') }}">
-    </div>
-  </section>
+    <figure class="story-card">
+      <p class="story-label">Why I built this</p>
+      <blockquote>
+        <p>I started this after trying to find a family doctor myself. It meant checking clinic websites, calling
+          offices, filling in waitlist forms and starting over when nothing came back. It felt like a second job, and I
+          got sick of it.</p>
+        <p>So I am building the tool I wished I had. You sign up once, and we do the chasing.</p>
+      </blockquote>
+      <figcaption>Vin, founder</figcaption>
+    </figure>
+  </div>
+</section>
 
-  <section class="card">
-    <h2>2. Where you are</h2>
-    <div class="field {% if errors.get('postal_code') %}has-error{% endif %}">
-      <label for="postal_code">Postal code</label>
-      <p class="hint">Used to find practices near you. We never share it with clinics.</p>
-      {{ err("postal_code") }}
-      <input id="postal_code" name="postal_code" autocomplete="postal-code" maxlength="7" class="short" required value="{{ values.get('postal_code', '') }}">
+<section class="section" id="how">
+  <div class="container">
+    <p class="section-eyebrow">How it works</p>
+    <h2 class="section-title">Three steps. Most of them are ours.</h2>
+    <ol class="steps-grid">
+      <li class="step-card">
+        <span class="step-num">1</span>
+        <h3>You sign up</h3>
+        <p>It takes about 3 minutes. Set how far you are willing to travel, from 1 to 25 km.</p>
+      </li>
+      <li class="step-card">
+        <span class="step-num">2</span>
+        <h3>We reach out to practices near you</h3>
+        <p>We contact family practices within your distance and keep checking back, so you do not have to.</p>
+      </li>
+      <li class="step-card">
+        <span class="step-num">3</span>
+        <h3>We tell you when one has room</h3>
+        <p>We email you how to contact the practice. You apply directly, and they decide.</p>
+      </li>
+    </ol>
+    <div class="callout">
+      <p><strong>We will reach out to practices near you, but we cannot guarantee a match.</strong>
+        Please also register with
+        <a href="https://www.ontario.ca/page/find-family-doctor-or-nurse-practitioner" rel="noopener">Health Care Connect</a>,
+        Ontario's free matching service. Signing up for both is a good idea.</p>
     </div>
-    {{ radio_group("radius_km", q.RADIUS_OPTIONS, "How far can you travel to a family doctor?") }}
-  </section>
+  </div>
+</section>
 
-  <section class="card">
-    <h2>3. Who needs a doctor</h2>
-    {{ radio_group("for_whom", q.FOR_WHOM_OPTIONS, "Who are you looking for?") }}
-    <div class="field {% if errors.get('household_size') %}has-error{% endif %}">
-      <label for="household_size">How many people in total? <span class="optional">(optional)</span></label>
-      {{ err("household_size") }}
-      <input id="household_size" name="household_size" type="number" min="1" max="12" class="short" value="{{ values.get('household_size', '') }}">
-    </div>
-    {{ radio_group("age_band", q.AGE_BAND_OPTIONS, "Age of the person who needs a doctor",
-                   "If you are signing up more than one person, choose the age of whoever needs care most.") }}
-    <div class="field">
-      <label for="language">Preferred language for care <span class="optional">(optional)</span></label>
-      <select id="language" name="language">
-        <option value="">Choose one</option>
-        {% for key, label in q.LANGUAGE_OPTIONS %}
-        <option value="{{ key }}" {% if values.get('language') == key %}selected{% endif %}>{{ label }}</option>
-        {% endfor %}
-      </select>
-    </div>
-  </section>
+<section class="section signup-section" id="signup">
+  <div class="container narrow">
+    <p class="section-eyebrow">Sign up</p>
+    <h2 class="section-title">Let us start looking for you.</h2>
+    <p class="section-lede">About 3 minutes. Questions marked optional can be skipped.</p>
 
-  <section class="card">
-    <h2>4. Your situation</h2>
-    {{ radio_group("time_without_doctor", q.TIME_WITHOUT_DOCTOR_OPTIONS, "How long have you been without a family doctor?") }}
-    {{ radio_group("ohip_status", q.OHIP_OPTIONS, "Do you have an Ontario health card (OHIP)?",
-                   "Most family practices need a valid health card to take you on.") }}
-    {{ radio_group("hcc_registered", q.HCC_OPTIONS, "Are you registered with Health Care Connect?") }}
-  </section>
+    <form class="signup" method="post" action="/signup#signup" novalidate>
+      {% if errors.get("form") %}<p class="error banner">{{ errors["form"] }}</p>{% elif errors %}
+      <p class="error banner">Please fix the highlighted answers below.</p>{% endif %}
 
-  <section class="card">
-    <h2>5. Anything that makes care more urgent <span class="optional">(optional)</span></h2>
-    <p class="hint">These answers help us tell people with greater need about openings first. Tick any that apply, or
-      skip this section. We never share these answers with clinics.</p>
-    {% set chosen = values.get('need_flags') or [] %}
-    <fieldset class="field">
-      <legend>Health</legend>
-      {% for key, group, label in q.NEED_FLAGS if group == "clinical" %}
-      <label class="choice"><input type="checkbox" name="need_flags" value="{{ key }}" {% if key in chosen %}checked{% endif %}> <span>{{ label }}</span></label>
-      {% endfor %}
-    </fieldset>
-    <fieldset class="field">
-      <legend>Access to care</legend>
-      {% for key, group, label in q.NEED_FLAGS if group == "access" %}
-      <label class="choice"><input type="checkbox" name="need_flags" value="{{ key }}" {% if key in chosen %}checked{% endif %}> <span>{{ label }}</span></label>
-      {% endfor %}
-    </fieldset>
-    <div class="field consent {% if errors.get('health_consent') %}has-error{% endif %}">
-      {{ err("health_consent") }}
-      <label class="choice"><input type="checkbox" name="health_consent" value="yes" {% if values.get('health_consent') == 'yes' %}checked{% endif %}>
-        <span>I agree that {{ settings.app_name }} can use the answers I ticked in this section to decide who is told about
-          openings first. Needed only if you ticked something above.</span></label>
-    </div>
-  </section>
+      <div class="hp" aria-hidden="true">
+        <label>Leave this empty <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+      </div>
 
-  <section class="card">
-    <h2>6. Your consent</h2>
-    <div class="field consent {% if errors.get('service_consent') %}has-error{% endif %}">
-      {{ err("service_consent") }}
-      <label class="choice"><input type="checkbox" name="service_consent" value="yes" required {% if values.get('service_consent') == 'yes' %}checked{% endif %}>
-        <span>I agree that {{ settings.app_name }} can use my email, phone number (if given), postal code and answers to look for
-          a family practice with room near me and to email me about it. {{ settings.app_name }} will not share my details with
-          clinics. I can delete my data at any time. I have read the <a href="/privacy">privacy notice</a>.</span></label>
-    </div>
-    <div class="field consent">
-      <label class="choice"><input type="checkbox" name="feedback_consent" value="yes" {% if values.get('feedback_consent') == 'yes' %}checked{% endif %}>
-        <span><span class="optional">Optional:</span> after I find a doctor, {{ settings.app_name }} may email me up to twice to ask how
-          it went. My contact details are kept for up to 90 days for this, then deleted.</span></label>
-    </div>
-    <div class="field">
-      <label for="referral_source">How did you hear about us? <span class="optional">(optional)</span></label>
-      <select id="referral_source" name="referral_source">
-        {% for key, label in q.REFERRAL_OPTIONS %}
-        <option value="{{ key }}" {% if values.get('referral_source') == key %}selected{% endif %}>{{ label }}</option>
-        {% endfor %}
-      </select>
-    </div>
-    <button type="submit" class="button">Sign up</button>
-    <p class="hint">We will email you a link to confirm. You are not on the list until you click it.</p>
-  </section>
-</form>
+      <section class="form-card">
+        <div class="form-card-head"><span class="form-step">1</span><h3>How to reach you</h3></div>
+        <div class="field {% if errors.get('email') %}has-error{% endif %}">
+          <label for="email">Email</label>
+          {{ err("email") }}
+          <input id="email" name="email" type="email" autocomplete="email" required placeholder="you@example.com" value="{{ values.get('email', '') }}">
+        </div>
+        <div class="field {% if errors.get('phone') %}has-error{% endif %}">
+          <label for="phone">Phone <span class="optional">(optional)</span></label>
+          <p class="hint">Only used if we cannot reach you by email.</p>
+          {{ err("phone") }}
+          <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="416-555-0123" value="{{ values.get('phone', '') }}">
+        </div>
+      </section>
+
+      <section class="form-card">
+        <div class="form-card-head"><span class="form-step">2</span><h3>Where you are</h3></div>
+        <div class="field {% if errors.get('postal_code') %}has-error{% endif %}">
+          <label for="postal_code">Postal code</label>
+          <p class="hint">Used to find practices near you. We never share it with clinics.</p>
+          {{ err("postal_code") }}
+          <input id="postal_code" name="postal_code" autocomplete="postal-code" maxlength="7" class="short" required placeholder="M5V 3L9" value="{{ values.get('postal_code', '') }}">
+        </div>
+        {% set radius = values.get('radius_km') or q.RADIUS_DEFAULT_KM %}
+        <div class="field radius-field {% if errors.get('radius_km') %}has-error{% endif %}">
+          <label for="radius_km">How far can you travel to a family doctor?</label>
+          <p class="hint">Drag to set your distance. A wider distance usually means a faster match.</p>
+          {{ err("radius_km") }}
+          <div class="radius-row">
+            <input id="radius_km" name="radius_km" type="range" min="{{ q.RADIUS_MIN_KM }}" max="{{ q.RADIUS_MAX_KM }}" step="1" value="{{ radius }}" aria-describedby="radius-value">
+            <output id="radius-value" for="radius_km" class="radius-value">{{ radius }} km</output>
+          </div>
+          <div class="radius-ticks" aria-hidden="true">
+            {% for t in q.RADIUS_TICKS %}<span>{{ t }} km</span>{% endfor %}
+          </div>
+        </div>
+      </section>
+
+      <section class="form-card">
+        <div class="form-card-head"><span class="form-step">3</span><h3>Who needs a doctor</h3></div>
+        {{ radio_group("for_whom", q.FOR_WHOM_OPTIONS, "Who are you looking for?") }}
+        <div class="field {% if errors.get('household_size') %}has-error{% endif %}">
+          <label for="household_size">How many people in total? <span class="optional">(optional)</span></label>
+          {{ err("household_size") }}
+          <input id="household_size" name="household_size" type="number" min="1" max="12" class="short" value="{{ values.get('household_size', '') }}">
+        </div>
+        {{ radio_group("split_household", q.SPLIT_OPTIONS,
+                       "If a practice has room for only some of the people you are signing up, would you take those spots?",
+                       "For example, a practice can take 2 new patients but you are a family of 4.", layout="stack") }}
+        {{ radio_group("age_band", q.AGE_BAND_OPTIONS, "Age of the person who needs a doctor",
+                       "If you are signing up more than one person, choose the age of whoever needs care most.") }}
+        <div class="field">
+          <label for="language">Preferred language for care <span class="optional">(optional)</span></label>
+          <select id="language" name="language">
+            <option value="">Choose one</option>
+            {% for key, label in q.LANGUAGE_OPTIONS %}
+            <option value="{{ key }}" {% if values.get('language') == key %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </section>
+
+      <section class="form-card">
+        <div class="form-card-head"><span class="form-step">4</span><h3>Your situation</h3></div>
+        {{ radio_group("time_without_doctor", q.TIME_WITHOUT_DOCTOR_OPTIONS, "How long have you been without a family doctor?") }}
+        {{ radio_group("ohip_status", q.OHIP_OPTIONS, "Do you have an Ontario health card (OHIP)?",
+                       "Most family practices need a valid health card to take you on.", layout="stack") }}
+        {{ radio_group("hcc_registered", q.HCC_OPTIONS, "Are you registered with Health Care Connect?") }}
+      </section>
+
+      <section class="form-card">
+        <div class="form-card-head"><span class="form-step">5</span><h3>Anything that makes care more urgent <span class="optional">(optional)</span></h3></div>
+        <p class="hint">These answers help us tell people with greater need about openings first. Tick any that apply to
+          anyone you are signing up, or skip this section. We never share these answers with clinics.</p>
+        {% set chosen = values.get('need_flags') or [] %}
+        <fieldset class="field">
+          <legend>Health</legend>
+          <div class="choices checks">
+          {% for key, group, label in q.NEED_FLAGS if group == "clinical" %}
+          <label class="choice"><input type="checkbox" name="need_flags" value="{{ key }}" {% if key in chosen %}checked{% endif %}> <span>{{ label }}</span></label>
+          {% endfor %}
+          </div>
+        </fieldset>
+        <fieldset class="field">
+          <legend>Access to care</legend>
+          <div class="choices checks">
+          {% for key, group, label in q.NEED_FLAGS if group == "access" %}
+          <label class="choice"><input type="checkbox" name="need_flags" value="{{ key }}" {% if key in chosen %}checked{% endif %}> <span>{{ label }}</span></label>
+          {% endfor %}
+          </div>
+        </fieldset>
+        <div class="field consent {% if errors.get('health_consent') %}has-error{% endif %}">
+          {{ err("health_consent") }}
+          <label class="choice"><input type="checkbox" name="health_consent" value="yes" {% if values.get('health_consent') == 'yes' %}checked{% endif %}>
+            <span>I agree that {{ settings.app_name }} can use the answers I ticked in this section to decide who is told
+              about openings first. Needed only if you ticked something above.</span></label>
+        </div>
+        <p class="hint"><a href="/privacy#priority">How we decide who hears first</a></p>
+      </section>
+
+      <section class="form-card">
+        <div class="form-card-head"><span class="form-step">6</span><h3>Your consent</h3></div>
+        <div class="field consent {% if errors.get('service_consent') %}has-error{% endif %}">
+          {{ err("service_consent") }}
+          <label class="choice"><input type="checkbox" name="service_consent" value="yes" required {% if values.get('service_consent') == 'yes' %}checked{% endif %}>
+            <span>I agree that {{ settings.app_name }} can use my email, phone number (if given), postal code and answers to
+              look for a family practice with room near me and to email me about it. {{ settings.app_name }} will not
+              share my details with clinics. I can delete my data at any time. I have read the
+              <a href="/privacy">privacy notice</a>.</span></label>
+        </div>
+        <div class="field consent">
+          <label class="choice"><input type="checkbox" name="feedback_consent" value="yes" {% if values.get('feedback_consent') == 'yes' %}checked{% endif %}>
+            <span><span class="optional">Optional:</span> after I find a doctor, {{ settings.app_name }} may email me up to
+              twice to ask how it went. My contact details are kept for up to 90 days for this, then deleted.</span></label>
+        </div>
+        <div class="field">
+          <label for="referral_source">How did you hear about us? <span class="optional">(optional)</span></label>
+          <select id="referral_source" name="referral_source">
+            {% for key, label in q.REFERRAL_OPTIONS %}
+            <option value="{{ key }}" {% if values.get('referral_source') == key %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <button type="submit" class="button primary large">Sign up free</button>
+        <p class="hint">We will email you a link to confirm. You are not on the list until you click it.</p>
+      </section>
+    </form>
+  </div>
+</section>
 {% endblock %}

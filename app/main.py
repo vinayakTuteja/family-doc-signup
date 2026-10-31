@@ -154,8 +154,14 @@ def validate(form: dict) -> tuple[dict, dict]:
         else:
             clean[field] = None
 
-    choice("radius_km", q.RADIUS_OPTIONS, message="Choose how far you can travel.")
+    radius = (form.get("radius_km") or "").strip()
+    if radius.isdigit() and q.RADIUS_MIN_KM <= int(radius) <= q.RADIUS_MAX_KM:
+        clean["radius_km"] = int(radius)
+    else:
+        errors["radius_km"] = f"Choose a distance from {q.RADIUS_MIN_KM} to {q.RADIUS_MAX_KM} km."
+        clean["radius_km"] = None
     choice("for_whom", q.FOR_WHOM_OPTIONS, message="Tell us who you are looking for.")
+    choice("split_household", q.SPLIT_OPTIONS, message="Choose an option.")
     choice("age_band", q.AGE_BAND_OPTIONS, message="Choose the age of the person who needs a doctor.")
     choice("language", q.LANGUAGE_OPTIONS, required=False)
     choice("time_without_doctor", q.TIME_WITHOUT_DOCTOR_OPTIONS, message="Choose how long it has been.")
@@ -234,12 +240,12 @@ async def signup(request: Request, background: BackgroundTasks):
         )
         conn.execute(
             """INSERT INTO profiles (id, contact_id, postal_code, postal_prefix, radius_km, for_whom, household_size,
-                   age_band, language, time_without_doctor, ohip_status, hcc_registered, need_flags, health_consent,
+                   split_household, age_band, language, time_without_doctor, ohip_status, hcc_registered, need_flags, health_consent,
                    feedback_consent, referral_source, status, created_at, last_active_at)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?)""",
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?)""",
             (
-                profile_id, contact_id, clean["postal_code"], clean["postal_code"][:3], int(clean["radius_km"]),
-                clean["for_whom"], clean["household_size"], clean["age_band"], clean["language"],
+                profile_id, contact_id, clean["postal_code"], clean["postal_code"][:3], clean["radius_km"],
+                clean["for_whom"], clean["household_size"], clean["split_household"], clean["age_band"], clean["language"],
                 clean["time_without_doctor"], clean["ohip_status"], clean["hcc_registered"],
                 ",".join(clean["need_flags"]), int(clean["health_consent"]), int(clean["feedback_consent"]),
                 clean["referral_source"], created, created,
@@ -415,6 +421,7 @@ def aggregate() -> dict:
         },
         "by_prefix": [(k, suppress(v)) for k, v in by_prefix.most_common()],
         "age": counts("age_band", q.AGE_BAND_OPTIONS),
+        "split": counts("split_household", q.SPLIT_OPTIONS),
         "gap": counts("time_without_doctor", q.TIME_WITHOUT_DOCTOR_OPTIONS),
         "ohip": counts("ohip_status", q.OHIP_OPTIONS),
         "hcc": counts("hcc_registered", q.HCC_OPTIONS),

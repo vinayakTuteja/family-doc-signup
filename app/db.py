@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS profiles (
     radius_km INTEGER NOT NULL,
     for_whom TEXT NOT NULL,
     household_size INTEGER,
+    split_household TEXT,          -- yes | no | single
     age_band TEXT,
     language TEXT,
     time_without_doctor TEXT,

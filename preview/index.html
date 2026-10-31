@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenPanel signup preview</title>
+<style>
+/* ------------------------------------------------------------------ tokens */
+:root {
+  --ink: #0f1714;
+  --ink-soft: #2b3631;
+  --muted: #5d6964;
+  --line: #e2e6e3;
+  --paper: #ffffff;
+  --mist: #f4f7f5;
+  --green-950: #062a20;
+  --green-900: #0b3b2e;
+  --green-700: #14664d;
+  --green-500: #1d8f6a;
+  --teal-400: #2fb3a3;
+  --mint: #e5f4ec;
+  --amber: #f6b93b;
+  --coral: #e8664f;
+  --error: #b42318;
+  --error-soft: #fef0ee;
+  --radius-sm: 10px;
+  --radius: 18px;
+  --radius-lg: 28px;
+  --shadow: 0 1px 2px rgba(15, 23, 20, 0.04), 0 8px 24px rgba(15, 23, 20, 0.06);
+  --shadow-lg: 0 2px 4px rgba(15, 23, 20, 0.05), 0 24px 60px rgba(6, 42, 32, 0.12);
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { font-size: 17px; scroll-behavior: smooth; scroll-padding-top: 80px; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--green-700); text-underline-offset: 3px; }
+a:hover { color: var(--green-900); }
+h1, h2, h3 { letter-spacing: -0.022em; line-height: 1.1; margin: 0 0 14px; }
+:focus-visible { outline: 3px solid var(--amber); outline-offset: 2px; }
+
+.container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+.container.narrow { max-width: 780px; }
+.skip { position: absolute; left: -999px; }
+.skip:focus { left: 12px; top: 12px; background: #fff; padding: 8px 12px; z-index: 50; }
+
+/* ------------------------------------------------------------------ header */
+.site-header {
+  position: sticky; top: 0; z-index: 20;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: saturate(180%) blur(18px);
+  -webkit-backdrop-filter: saturate(180%) blur(18px);
+  border-bottom: 1px solid rgba(15, 23, 20, 0.08);
+}
+.header-row { display: flex; align-items: center; justify-content: space-between; height: 62px; gap: 16px; }
+.brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.15rem; color: var(--ink); text-decoration: none; letter-spacing: -0.02em; }
+.brand-mark {
+  width: 22px; height: 22px; border-radius: 7px; flex: none;
+  background: conic-gradient(from 210deg, var(--green-500), var(--teal-400), var(--amber), var(--green-500));
+}
+.nav { display: flex; align-items: center; gap: 22px; font-size: 0.92rem; }
+.nav a { color: var(--ink-soft); text-decoration: none; }
+.nav a:hover { color: var(--ink); }
+.nav-cta { background: var(--ink); color: #fff !important; padding: 8px 16px; border-radius: 999px; font-weight: 600; }
+.nav-cta:hover { background: var(--green-900); }
+
+/* ------------------------------------------------------------------ hero */
+.hero {
+  position: relative; overflow: hidden; color: #fff;
+  background:
+    radial-gradient(900px 500px at 85% 10%, rgba(47, 179, 163, 0.55), transparent 60%),
+    radial-gradient(700px 500px at 10% 110%, rgba(246, 185, 59, 0.28), transparent 60%),
+    linear-gradient(160deg, var(--green-950) 0%, var(--green-900) 45%, var(--green-700) 100%);
+}
+.hero::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 22px 22px; mask-image: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent 80%);
+}
+.hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.5fr 1fr; gap: 48px; align-items: end; padding-top: 110px; padding-bottom: 110px; }
+.eyebrow { display: inline-block; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.02em; color: #c9f1e4; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); padding: 6px 12px; border-radius: 999px; margin: 0 0 22px; }
+.hero h1 { font-size: clamp(2.5rem, 5.6vw, 4.4rem); font-weight: 750; letter-spacing: -0.035em; margin-bottom: 22px; max-width: 13ch; }
+.lede { font-size: clamp(1.1rem, 1.6vw, 1.3rem); color: rgba(255, 255, 255, 0.86); max-width: 34em; margin: 0 0 32px; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.hero-stat {
+  background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border-radius: var(--radius-lg); padding: 30px 30px 26px;
+}
+.stat-number { font-size: clamp(3.4rem, 7vw, 5.2rem); font-weight: 800; letter-spacing: -0.045em; line-height: 1; margin: 0 0 10px;
+  background: linear-gradient(90deg, #fff, var(--amber)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.stat-label { font-size: 1.15rem; margin: 0 0 14px; color: #fff; }
+.stat-source { font-size: 0.8rem; color: rgba(255, 255, 255, 0.6); margin: 0; }
+
+/* ------------------------------------------------------------------ sections */
+.section { padding: 104px 0; }
+.section.tinted { background: var(--mist); }
+.section-eyebrow { color: var(--green-500); font-weight: 700; font-size: 0.9rem; letter-spacing: 0.04em; text-transform: uppercase; margin: 0 0 12px; }
+.section-title { font-size: clamp(2rem, 4vw, 3.1rem); font-weight: 750; letter-spacing: -0.03em; max-width: 18ch; }
+.section-lede { font-size: 1.18rem; color: var(--muted); max-width: 38em; margin: 0 0 40px; }
+.section-link { margin: 28px 0 0; font-weight: 600; }
+.section-link a::after { content: " \2192"; }
+
+.card-grid { display: grid; gap: 20px; }
+.card-grid.three { grid-template-columns: repeat(3, 1fr); }
+.feature-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 30px; box-shadow: var(--shadow); }
+.feature-card h3 { font-size: 1.3rem; margin-top: 18px; }
+.feature-card ul { list-style: none; margin: 0; padding: 0; color: var(--ink-soft); }
+.feature-card li { padding: 8px 0; border-top: 1px solid var(--line); }
+.feature-card li:first-child { border-top: 0; }
+.icon-dot { display: inline-flex; width: 44px; height: 44px; border-radius: 14px; align-items: center; justify-content: center; font-weight: 800; font-size: 1.2rem; }
+.icon-dot.ok { background: var(--mint); color: var(--green-700); }
+.icon-dot.ok::before { content: "\2713"; }
+.icon-dot.no { background: #fdece8; color: var(--coral); }
+.icon-dot.no::before { content: "\2715"; }
+.icon-dot.shield { background: #fff4dc; color: #a86b00; }
+.icon-dot.shield::before { content: "\25C6"; }
+
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+.story-card { margin: 0; background: #fff; border-radius: var(--radius-lg); padding: 38px; box-shadow: var(--shadow-lg); position: relative; }
+.story-card::before { content: "\201C"; position: absolute; top: -18px; left: 28px; font-size: 6rem; line-height: 1; color: var(--teal-400); font-family: Georgia, serif; }
+.story-label { font-weight: 700; color: var(--green-500); text-transform: uppercase; letter-spacing: 0.04em; font-size: 0.85rem; margin: 0 0 14px; }
+.story-card blockquote { margin: 0; font-size: 1.15rem; color: var(--ink-soft); }
+.story-card blockquote p { margin: 0 0 14px; }
+.story-card figcaption { font-weight: 700; margin-top: 8px; }
+
+.steps-grid { list-style: none; padding: 0; margin: 0 0 32px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; counter-reset: none; }
+.step-card { background: linear-gradient(180deg, #fff, var(--mist)); border: 1px solid var(--line); border-radius: var(--radius); padding: 30px; }
+.step-num { display: inline-flex; width: 46px; height: 46px; border-radius: 50%; align-items: center; justify-content: center; font-weight: 800; color: #fff; margin-bottom: 18px;
+  background: linear-gradient(135deg, var(--green-500), var(--teal-400)); box-shadow: 0 6px 16px rgba(29, 143, 106, 0.35); }
+.step-card h3 { font-size: 1.25rem; }
+.step-card p { color: var(--muted); margin: 0; }
+
+.callout { background: var(--mint); border: 1px solid #c6e8d6; border-left: 6px solid var(--green-500); border-radius: var(--radius); padding: 22px 26px; font-size: 1.05rem; }
+.callout p { margin: 0; }
+
+/* ------------------------------------------------------------------ buttons */
+.button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font: inherit; font-weight: 650; border: 0; border-radius: 999px; padding: 13px 26px; cursor: pointer; text-decoration: none; transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease; }
+.button:hover { transform: translateY(-1px); }
+.button.light { background: #fff; color: var(--green-900); box-shadow: 0 10px 30px rgba(0,0,0,0.18); }
+.button.light:hover { color: var(--green-950); }
+.button.ghost { background: transparent; color: #fff; border: 1.5px solid rgba(255, 255, 255, 0.45); }
+.button.ghost:hover { color: #fff; background: rgba(255,255,255,0.08); }
+.button, .button.primary { background: linear-gradient(135deg, var(--green-700), var(--green-500)); color: #fff; box-shadow: 0 8px 22px rgba(20, 102, 77, 0.28); }
+.button.light { background: #fff; color: var(--green-900); }
+.button.ghost { background: transparent; box-shadow: none; }
+.button.large { padding: 16px 34px; font-size: 1.08rem; margin: 10px 0 12px; }
+.button.secondary { background: #fff; color: var(--green-700); border: 2px solid var(--green-700); box-shadow: none; }
+.button.danger { background: var(--error); box-shadow: none; }
+.inline-action { display: inline-block; margin: 0 10px 10px 0; }
+
+/* ------------------------------------------------------------------ form */
+.signup-section { background: linear-gradient(180deg, var(--mist), #fff 40%); }
+.form-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 30px; margin-bottom: 18px; box-shadow: var(--shadow); }
+.form-card-head { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+.form-card-head h3 { font-size: 1.3rem; margin: 0; }
+.form-step { flex: none; width: 34px; height: 34px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.95rem; color: var(--green-700); background: var(--mint); }
+
+.field { margin: 0 0 26px; border: 0; padding: 0; min-width: 0; }
+.field:last-child { margin-bottom: 0; }
+legend, .field > label { font-weight: 650; display: block; margin-bottom: 8px; padding: 0; }
+.optional { font-weight: 400; color: var(--muted); }
+.hint { color: var(--muted); font-size: 0.92rem; margin: -2px 0 10px; }
+
+input[type="email"], input[type="tel"], input[type="text"], input[type="number"], input:not([type]), select {
+  width: 100%; max-width: 440px; font: inherit; padding: 12px 14px;
+  border: 1.5px solid #cdd5d0; border-radius: var(--radius-sm); background: #fff; color: var(--ink);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+input:focus, select:focus { border-color: var(--green-500); box-shadow: 0 0 0 4px rgba(29, 143, 106, 0.15); outline: none; }
+input.short { max-width: 170px; }
+::placeholder { color: #9aa5a0; }
+
+.choices { display: grid; gap: 10px; }
+.choices.tiles { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
+.choices.stack, .choices.checks { grid-template-columns: 1fr; }
+.choice {
+  display: flex; gap: 12px; align-items: flex-start; font-weight: 450; cursor: pointer; margin: 0;
+  border: 1.5px solid var(--line); border-radius: 14px; padding: 13px 15px; background: #fff;
+  transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+.choice:hover { border-color: #b9c6bf; }
+.choice:has(input:checked) { border-color: var(--green-500); background: var(--mint); box-shadow: 0 0 0 3px rgba(29, 143, 106, 0.12); }
+.choice input { margin-top: 0.22em; width: 18px; height: 18px; flex: none; accent-color: var(--green-700); }
+.consent .choice { background: var(--mist); }
+.consent { margin-bottom: 14px; }
+
+/* radius slider */
+.radius-row { display: flex; align-items: center; gap: 18px; max-width: 560px; }
+.radius-value { flex: none; min-width: 78px; text-align: center; font-weight: 800; font-size: 1.15rem; color: var(--green-900); background: var(--mint); border-radius: 999px; padding: 6px 12px; }
+input[type="range"] {
+  --fill: 16.6%;
+  -webkit-appearance: none; appearance: none; flex: 1; height: 8px; border-radius: 999px; margin: 14px 0;
+  background: linear-gradient(90deg, var(--green-500) 0%, var(--teal-400) var(--fill), #dfe5e1 var(--fill));
+  accent-color: var(--green-700);
+}
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 28px; height: 28px; border-radius: 50%; background: #fff; border: 3px solid var(--green-700); box-shadow: 0 4px 12px rgba(0,0,0,0.18); cursor: grab; }
+input[type="range"]::-moz-range-thumb { width: 24px; height: 24px; border-radius: 50%; background: #fff; border: 3px solid var(--green-700); box-shadow: 0 4px 12px rgba(0,0,0,0.18); cursor: grab; }
+input[type="range"]::-moz-range-track { background: transparent; }
+.radius-ticks { display: flex; justify-content: space-between; max-width: 464px; color: var(--muted); font-size: 0.78rem; }
+
+.has-error input, .has-error select { border-color: var(--error); }
+.has-error .choice { border-color: #f1b5ad; }
+.error { color: var(--error); font-weight: 650; margin: 0 0 8px; font-size: 0.93rem; }
+.banner { padding: 14px 18px; border-radius: var(--radius-sm); margin: 0 0 18px; }
+.error.banner { background: var(--error-soft); border: 1px solid #f6c9c2; }
+.success.banner { background: var(--mint); color: var(--green-900); font-weight: 650; }
+.hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+
+/* ------------------------------------------------------------------ inner pages */
+.page-body { padding-top: 64px; padding-bottom: 80px; }
+.page-body h1 { font-size: clamp(2rem, 4vw, 2.7rem); font-weight: 750; }
+.card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 30px; margin-bottom: 18px; box-shadow: var(--shadow); }
+.message { max-width: 640px; }
+.note { background: var(--mint); border-left: 5px solid var(--green-500); padding: 14px 18px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+.summary { display: grid; grid-template-columns: max-content 1fr; gap: 8px 20px; margin: 0 0 22px; }
+.summary dt { color: var(--muted); }
+.summary dd { margin: 0; font-weight: 600; }
+.email-body { white-space: pre-wrap; word-break: break-word; font-family: inherit; font-size: 0.95rem; margin: 0; }
+
+table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+th, td { text-align: left; padding: 10px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--muted); font-weight: 600; }
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 0 18px; }
+.prose h2 { margin-top: 30px; font-size: 1.4rem; }
+.prose ul { padding-left: 1.2em; }
+
+/* ------------------------------------------------------------------ footer */
+.site-footer { background: var(--green-950); color: rgba(255, 255, 255, 0.72); font-size: 0.9rem; padding: 48px 0 56px; }
+.site-footer a { color: #c9f1e4; }
+.footer-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 40px; }
+.footer-grid p { margin: 0 0 10px; }
+.footer-brand { display: inline-flex; align-items: center; gap: 10px; color: #fff; font-weight: 700; font-size: 1.1rem; }
+
+/* ------------------------------------------------------------------ responsive */
+@media (max-width: 900px) {
+  .hero-grid, .split, .card-grid.three, .steps-grid, .footer-grid { grid-template-columns: 1fr; }
+  .hero-grid { padding-top: 72px; padding-bottom: 72px; gap: 32px; }
+  .section { padding: 72px 0; }
+}
+@media (max-width: 600px) {
+  html { font-size: 16px; }
+  .nav a:not(.nav-cta) { display: none; }
+  .container { padding: 0 18px; }
+  .form-card, .card, .feature-card, .step-card { padding: 22px; }
+  .story-card { padding: 30px 24px; }
+  .choices.tiles { grid-template-columns: 1fr 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .button { transition: none; }
+}
+
+
+.preview-bar { background: #20302a; color: #f1f5f2; font-size: 0.85rem; }
+.preview-bar .container { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: center; padding-top: 10px; padding-bottom: 10px; }
+.preview-bar strong { color: #f2c94c; }
+.preview-bar button { background: none; border: 1px solid #5d7268; color: #f1f5f2; border-radius: 6px; padding: 4px 10px; font: inherit; cursor: pointer; }
+.preview-bar button:hover, .preview-bar button.active { background: #34493f; }
+.view[hidden] { display: none; }
+.badge { display: inline-block; min-width: 1.4em; padding: 0 6px; margin-left: 4px; border-radius: 10px; background: #f2c94c; color: #20302a; font-weight: 700; text-align: center; }
+.email-card .email-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+.linklike { background: none; border: 0; padding: 0; font: inherit; color: var(--accent); text-decoration: underline; cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="preview-bar">
+  <div class="container">
+    <span><strong>Preview</strong> · nothing you enter is saved or sent</span>
+    <button data-go="home">Signup page</button>
+    <button data-go="inbox">Test inbox<span class="badge" id="inbox-count">0</span></button>
+    <button data-go="admin">Admin dashboard</button>
+    <button data-go="privacy-notice">Privacy notice</button>
+    <button id="reset">Reset</button>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="container header-row">
+    <a class="brand" href="#home"><span class="brand-mark" aria-hidden="true"></span>OpenPanel</a>
+    <nav class="nav" aria-label="Main">
+      <a href="#how">How it works</a>
+      <a href="#privacy">Privacy</a>
+      <a class="nav-cta" href="#signup">Sign up free</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <div class="view" id="view-home">
+    
+<section class="hero">
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow">Free · Ontario · Starting in Toronto</p>
+      <h1>Finding a family doctor should not be a second job.</h1>
+      <p class="lede">Sign up once. We reach out to family practices near you, within a distance you choose, and email
+        you when one has room for new patients.</p>
+      <div class="hero-actions">
+        <a class="button light" href="#signup">Sign up free</a>
+        <a class="button ghost" href="#how">How it works</a>
+      </div>
+    </div>
+    <aside class="hero-stat" aria-label="Why this matters">
+      <p class="stat-number">1.9M</p>
+      <p class="stat-label">people in Ontario want a family doctor and do not have one.</p>
+      <p class="stat-source">Government of Ontario, Budget 2026</p>
+    </aside>
+  </div>
+</section>
+
+<section class="section" id="privacy">
+  <div class="container">
+    <p class="section-eyebrow">Your privacy</p>
+    <h2 class="section-title">We ask for as little as possible.</h2>
+    <p class="section-lede">Here is exactly what we collect, what we never collect, and who sees it.</p>
+    <div class="card-grid three">
+      <article class="feature-card">
+        <span class="icon-dot ok" aria-hidden="true"></span>
+        <h3>What we ask for</h3>
+        <ul>
+          <li>Your email (phone is optional)</li>
+          <li>Your postal code and how far you can travel</li>
+          <li>A few multiple-choice questions</li>
+          <li>Optional yes/no questions about need, only with your consent</li>
+        </ul>
+      </article>
+      <article class="feature-card">
+        <span class="icon-dot no" aria-hidden="true"></span>
+        <h3>What we never ask for</h3>
+        <ul>
+          <li>Your name</li>
+          <li>Your health card number</li>
+          <li>Diagnoses, medications or medical records</li>
+        </ul>
+      </article>
+      <article class="feature-card">
+        <span class="icon-dot shield" aria-hidden="true"></span>
+        <h3>Who sees it</h3>
+        <ul>
+          <li>No clinic sees your details. You contact them yourself.</li>
+          <li>We never sell your data.</li>
+          <li>Stored on servers in Canada.</li>
+          <li>Delete everything with one click, any time.</li>
+        </ul>
+      </article>
+    </div>
+    <p class="section-link"><a href="#privacy-notice">Read the full privacy notice</a></p>
+  </div>
+</section>
+
+<section class="section tinted" id="why">
+  <div class="container split">
+    <div>
+      <p class="section-eyebrow">Free for everyone</p>
+      <h2 class="section-title">No fees. No paying to get ahead.</h2>
+      <p class="section-lede">There is no premium tier and nothing to buy. Everyone in an area hears about openings by
+        the same published rules, with people who need care most told first.</p>
+    </div>
+    <figure class="story-card">
+      <p class="story-label">Why I built this</p>
+      <blockquote>
+        <p>I started this after trying to find a family doctor myself. It meant checking clinic websites, calling
+          offices, filling in waitlist forms and starting over when nothing came back. It felt like a second job, and I
+          got sick of it.</p>
+        <p>So I am building the tool I wished I had. You sign up once, and we do the chasing.</p>
+      </blockquote>
+      <figcaption>Vin, founder</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="section" id="how">
+  <div class="container">
+    <p class="section-eyebrow">How it works</p>
+    <h2 class="section-title">Three steps. Most of them are ours.</h2>
+    <ol class="steps-grid">
+      <li class="step-card">
+        <span class="step-num">1</span>
+        <h3>You sign up</h3>
+        <p>It takes about 3 minutes. Set how far you are willing to travel, from 1 to 25 km.</p>
+      </li>
+      <li class="step-card">
+        <span class="step-num">2</span>
+        <h3>We reach out to practices near you</h3>
+        <p>We contact family practices within your distance and keep checking back, so you do not have to.</p>
+      </li>
+      <li class="step-card">
+        <span class="step-num">3</span>
+        <h3>We tell you when one has room</h3>
+        <p>We email you how to contact the practice. You apply directly, and they decide.</p>
+      </li>
+    </ol>
+    <div class="callout">
+      <p><strong>We will reach out to practices near you, but we cannot guarantee a match.</strong>
+        Please also register with
+        <a href="https://www.ontario.ca/page/find-family-doctor-or-nurse-practitioner" rel="noopener">Health Care Connect</a>,
+        Ontario's free matching service. Signing up for both is a good idea.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section signup-section" id="signup">
+  <div class="container narrow">
+    <p class="section-eyebrow">Sign up</p>
+    <h2 class="section-title">Let us start looking for you.</h2>
+    <p class="section-lede">About 3 minutes. Questions marked optional can be skipped.</p>
+
+    <form class="signup" id="signup-form" novalidate>
+      
+
+      <div class="hp" aria-hidden="true">
+        <label>Leave this empty <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+      </div>
+
+      <section class="form-card">
+        <div class="form-card-head"><span class="form-step">1</span><h3>How to reach you</h3></div>
+        <div class="field ">
+          <label for="email">Email</label>
+          
+          <input id="email" name="email" type="email" autocomplete="email" required placeholder="you@example.com" value="">
+        </div>
+        <div class="field ">
+          <label for="phone">Phone <span class="optional">(optional)</span></label>
+          <p class="hint">Only used if we cannot reach you by email.</p>
+          
+          <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="416-555-0123" value="">
+        </div>
+      </section>
+
+      <section class="form-card">
+        <div class="form-card-head"><span class="form-step">2</span><h3>Where you are</h3></div>
+        <div class="field ">
+          <label for="postal_code">Postal code</label>
+          <p class="hint">Used to find practices near you. We never share it with clinics.</p>
+          
+          <input id="postal_code" name="postal_code" autocomplete="postal-code" maxlength="7" class="short" required placeholder="M5V 3L9" value="">
+        </div>
+        
+        <div class="field radius-field ">
+          <label for="radius_km">How far can you travel to a family doctor?</label>
+          <p class="hint">Drag to set your distance. A wider distance usually means a faster match.</p>
+          
+          <div class="radius-row">
+            <input id="radius_km" name="radius_km" type="range" min="1" max="25" step="1" value="5" aria-describedby="radius-value">
+            <output id="radius-value" for="radius_km" class="radius-value">5 km</output>
+          </div>
+          <div class="radius-ticks" aria-hidden="true">
+            <span>1 km</span><span>5 km</span><span>10 km</span><span>15 km</span><span>20 km</span><span>25 km</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="form-card">
+        <div class="form-card-head"><span class="form-step">3</span><h3>Who needs a doctor</h3></div>
+        <fieldset class="field ">
+    <legend>Who are you looking for?</legend>
+    
+    
+    <div class="choices tiles">
+    
+      <label class="choice"><input type="radio" name="for_whom" value="self" > <span>Myself</span></label>
+    
+      <label class="choice"><input type="radio" name="for_whom" value="child" > <span>My child</span></label>
+    
+      <label class="choice"><input type="radio" name="for_whom" value="household" > <span>Me and my family</span></label>
+    
+      <label class="choice"><input type="radio" name="for_whom" value="someone_i_care_for" > <span>Someone I care for</span></label>
+    
+    </div>
+  </fieldset>
+        <div class="field ">
+          <label for="household_size">How many people in total? <span class="optional">(optional)</span></label>
+          
+          <input id="household_size" name="household_size" type="number" min="1" max="12" class="short" value="">
+        </div>
+        <fieldset class="field ">
+    <legend>If a practice has room for only some of the people you are signing up, would you take those spots?</legend>
+    <p class="hint">For example, a practice can take 2 new patients but you are a family of 4.</p>
+    
+    <div class="choices stack">
+    
+      <label class="choice"><input type="radio" name="split_household" value="yes" > <span>Yes, take the spots for some of us now and keep looking for the rest</span></label>
+    
+      <label class="choice"><input type="radio" name="split_household" value="no" > <span>No, we need a practice that can take all of us</span></label>
+    
+      <label class="choice"><input type="radio" name="split_household" value="single" > <span>I am only signing up one person</span></label>
+    
+    </div>
+  </fieldset>
+        <fieldset class="field ">
+    <legend>Age of the person who needs a doctor</legend>
+    <p class="hint">If you are signing up more than one person, choose the age of whoever needs care most.</p>
+    
+    <div class="choices tiles">
+    
+      <label class="choice"><input type="radio" name="age_band" value="under_2" > <span>Under 2</span></label>
+    
+      <label class="choice"><input type="radio" name="age_band" value="2_17" > <span>2 to 17</span></label>
+    
+      <label class="choice"><input type="radio" name="age_band" value="18_64" > <span>18 to 64</span></label>
+    
+      <label class="choice"><input type="radio" name="age_band" value="65_74" > <span>65 to 74</span></label>
+    
+      <label class="choice"><input type="radio" name="age_band" value="75_plus" > <span>75 or older</span></label>
+    
+    </div>
+  </fieldset>
+        <div class="field">
+          <label for="language">Preferred language for care <span class="optional">(optional)</span></label>
+          <select id="language" name="language">
+            <option value="">Choose one</option>
+            
+            <option value="en" >English</option>
+            
+            <option value="fr" >French</option>
+            
+            <option value="ar" >Arabic</option>
+            
+            <option value="yue" >Cantonese</option>
+            
+            <option value="fa" >Farsi (Persian)</option>
+            
+            <option value="gu" >Gujarati</option>
+            
+            <option value="hi" >Hindi</option>
+            
+            <option value="it" >Italian</option>
+            
+            <option value="ko" >Korean</option>
+            
+            <option value="cmn" >Mandarin</option>
+            
+            <option value="pt" >Portuguese</option>
+            
+            <option value="pa" >Punjabi</option>
+            
+            <option value="ru" >Russian</option>
+            
+            <option value="es" >Spanish</option>
+            
+            <option value="tl" >Tagalog</option>
+            
+            <option value="ta" >Tamil</option>
+            
+            <option value="ur" >Urdu</option>
+            
+            <option value="other" >Another language</option>
+            
+          </select>
+        </div>
+      </section>
+
+      <section class="form-card">
+        <div class="form-card-head"><span class="form-step">4</span><h3>Your situation</h3></div>
+        <fieldset class="field ">
+    <legend>How long have you been without a family doctor?</legend>
+    
+    
+    <div class="choices tiles">
+    
+      <label class="choice"><input type="radio" name="time_without_doctor" value="lt_6m" > <span>Less than 6 months</span></label>
+    
+      <label class="choice"><input type="radio" name="time_without_doctor" value="6_12m" > <span>6 to 12 months</span></label>
+    
+      <label class="choice"><input type="radio" name="time_without_doctor" value="1_2y" > <span>1 to 2 years</span></label>
+    
+      <label class="choice"><input type="radio" name="time_without_doctor" value="2_5y" > <span>2 to 5 years</span></label>
+    
+      <label class="choice"><input type="radio" name="time_without_doctor" value="5y_plus" > <span>More than 5 years</span></label>
+    
+      <label class="choice"><input type="radio" name="time_without_doctor" value="never" > <span>I have never had one in Ontario</span></label>
+    
+    </div>
+  </fieldset>
+        <fieldset class="field ">
+    <legend>Do you have an Ontario health card (OHIP)?</legend>
+    <p class="hint">Most family practices need a valid health card to take you on.</p>
+    
+    <div class="choices stack">
+    
+      <label class="choice"><input type="radio" name="ohip_status" value="yes" > <span>Yes, I have a valid Ontario health card</span></label>
+    
+      <label class="choice"><input type="radio" name="ohip_status" value="waiting" > <span>I am waiting for my health card</span></label>
+    
+      <label class="choice"><input type="radio" name="ohip_status" value="no" > <span>No</span></label>
+    
+    </div>
+  </fieldset>
+        <fieldset class="field ">
+    <legend>Are you registered with Health Care Connect?</legend>
+    
+    
+    <div class="choices tiles">
+    
+      <label class="choice"><input type="radio" name="hcc_registered" value="yes" > <span>Yes</span></label>
+    
+      <label class="choice"><input type="radio" name="hcc_registered" value="no" > <span>No</span></label>
+    
+      <label class="choice"><input type="radio" name="hcc_registered" value="not_sure" > <span>Not sure</span></label>
+    
+    </div>
+  </fieldset>
+      </section>
+
+      <section class="form-card">
+        <div class="form-card-head"><span class="form-step">5</span><h3>Anything that makes care more urgent <span class="optional">(optional)</span></h3></div>
+        <p class="hint">These answers help us tell people with greater need about openings first. Tick any that apply to
+          anyone you are signing up, or skip this section. We never share these answers with clinics.</p>
+        
+        <fieldset class="field">
+          <legend>Health</legend>
+          <div class="choices checks">
+          
+          <label class="choice"><input type="checkbox" name="need_flags" value="ongoing_condition" > <span>An ongoing health condition that needs regular care (e.g. diabetes, heart disease, COPD, kidney disease etc.)</span></label>
+          
+          <label class="choice"><input type="checkbox" name="need_flags" value="multiple_meds" > <span>3 or more regular prescriptions, or medication that needs blood tests or dose changes (e.g. insulin, blood thinners etc.)</span></label>
+          
+          <label class="choice"><input type="checkbox" name="need_flags" value="immunocompromised" > <span>A weakened immune system (e.g. from cancer treatment, a transplant, an autoimmune condition etc.)</span></label>
+          
+          <label class="choice"><input type="checkbox" name="need_flags" value="pregnancy" > <span>Pregnant, or gave birth in the last 12 months</span></label>
+          
+          <label class="choice"><input type="checkbox" name="need_flags" value="mental_health" > <span>A mental health condition that needs ongoing care (e.g. depression or anxiety that affects daily life, bipolar disorder etc.)</span></label>
+          
+          <label class="choice"><input type="checkbox" name="need_flags" value="recent_hospital" > <span>A hospital stay, surgery, or 2 or more emergency room visits in the last 12 months</span></label>
+          
+          <label class="choice"><input type="checkbox" name="need_flags" value="needs_followup" > <span>A new diagnosis or test result that needs follow-up, with no one to follow up with</span></label>
+          
+          <label class="choice"><input type="checkbox" name="need_flags" value="serious_illness" > <span>A serious or life-limiting illness (e.g. cancer, advanced heart or lung disease etc.)</span></label>
+          
+          </div>
+        </fieldset>
+        <fieldset class="field">
+          <legend>Access to care</legend>
+          <div class="choices checks">
+          
+          <label class="choice"><input type="checkbox" name="need_flags" value="newcomer" > <span>Arrived in Canada in the last 3 years (e.g. as an immigrant, refugee, international student etc.)</span></label>
+          
+          <label class="choice"><input type="checkbox" name="need_flags" value="disability" > <span>A disability or frailty that makes getting care harder (e.g. limited mobility, hearing or vision loss etc.)</span></label>
+          
+          <label class="choice"><input type="checkbox" name="need_flags" value="language_barrier" > <span>Need care in a language other than English or French</span></label>
+          
+          <label class="choice"><input type="checkbox" name="need_flags" value="no_transport" > <span>No reliable way to get to appointments</span></label>
+          
+          <label class="choice"><input type="checkbox" name="need_flags" value="no_alternative_care" > <span>No walk-in clinic or virtual care you can realistically use (e.g. none nearby, hours do not fit your work, cannot pay virtual care fees etc.)</span></label>
+          
+          <label class="choice"><input type="checkbox" name="need_flags" value="limited_support" > <span>Live alone and need help managing health, or care for someone with high needs</span></label>
+          
+          <label class="choice"><input type="checkbox" name="need_flags" value="unstable_housing" > <span>Unstable housing, or at risk of losing housing</span></label>
+          
+          <label class="choice"><input type="checkbox" name="need_flags" value="financial_hardship" > <span>Trouble affording basics (e.g. food, rent, medications etc.)</span></label>
+          
+          </div>
+        </fieldset>
+        <div class="field consent ">
+          
+          <label class="choice"><input type="checkbox" name="health_consent" value="yes" >
+            <span>I agree that OpenPanel can use the answers I ticked in this section to decide who is told
+              about openings first. Needed only if you ticked something above.</span></label>
+        </div>
+        <p class="hint"><a href="#privacy-notice">How we decide who hears first</a></p>
+      </section>
+
+      <section class="form-card">
+        <div class="form-card-head"><span class="form-step">6</span><h3>Your consent</h3></div>
+        <div class="field consent ">
+          
+          <label class="choice"><input type="checkbox" name="service_consent" value="yes" required >
+            <span>I agree that OpenPanel can use my email, phone number (if given), postal code and answers to
+              look for a family practice with room near me and to email me about it. OpenPanel will not
+              share my details with clinics. I can delete my data at any time. I have read the
+              <a href="#privacy-notice">privacy notice</a>.</span></label>
+        </div>
+        <div class="field consent">
+          <label class="choice"><input type="checkbox" name="feedback_consent" value="yes" >
+            <span><span class="optional">Optional:</span> after I find a doctor, OpenPanel may email me up to
+              twice to ask how it went. My contact details are kept for up to 90 days for this, then deleted.</span></label>
+        </div>
+        <div class="field">
+          <label for="referral_source">How did you hear about us? <span class="optional">(optional)</span></label>
+          <select id="referral_source" name="referral_source">
+            
+            <option value="" >Choose one (optional)</option>
+            
+            <option value="friend_family" >A friend or family member</option>
+            
+            <option value="social_media" >Social media</option>
+            
+            <option value="community_group" >A community group or settlement agency</option>
+            
+            <option value="clinic_pharmacy" >A clinic, pharmacy or hospital</option>
+            
+            <option value="search" >Searching online</option>
+            
+            <option value="news" >News or a blog</option>
+            
+            <option value="other" >Other</option>
+            
+          </select>
+        </div>
+        <button type="submit" class="button primary large">Sign up free</button>
+        <p class="hint">We will email you a link to confirm. You are not on the list until you click it.</p>
+      </section>
+    </form>
+  </div>
+</section>
+
+  </div>
+
+  <div class="view" id="view-thanks" hidden><div class="container narrow page-body">
+    <section class="card message">
+      <h1>Check your email</h1>
+      <p>We have sent you a link to confirm your signup. You are not on the list until you click it.</p>
+      <p>Do not see it? Check your spam or junk folder. The link stays valid for 7 days.</p>
+      <p>While you wait, register with
+        <a href="https://www.ontario.ca/page/find-family-doctor-or-nurse-practitioner" target="_blank" rel="noopener">Health Care Connect</a>
+        if you have not already.</p>
+      <p class="note">Preview: open the <button class="linklike" data-go="inbox">test inbox</button> to see the email this person would get.</p>
+    </section>
+  </div></div>
+
+  <div class="view" id="view-inbox" hidden><div class="container narrow page-body">
+    <h1>Test inbox</h1>
+    <p class="note">In the real site these go to the person's email. Newest first.</p>
+    <div id="inbox-list"></div>
+  </div></div>
+
+  <div class="view" id="view-confirm" hidden><div class="container narrow page-body">
+    <section class="card message">
+      <h1>Confirm your email</h1>
+      <p>Click the button to confirm your email and join the list.</p>
+      <button class="button" id="confirm-btn">Confirm my email</button>
+    </section>
+  </div></div>
+
+  <div class="view" id="view-message" hidden><div class="container narrow page-body">
+    <section class="card message">
+      <h1 id="msg-title"></h1>
+      <p id="msg-body"></p>
+      <p id="msg-hcc" hidden><a href="https://www.ontario.ca/page/find-family-doctor-or-nurse-practitioner" target="_blank" rel="noopener">Register with Health Care Connect</a></p>
+      <p><a href="#home">Back to home</a></p>
+    </section>
+  </div></div>
+
+  <div class="view" id="view-manage" hidden><div class="container narrow page-body">
+    <section class="card message">
+      <h1>Your signup</h1>
+      <p class="success banner" id="manage-done" hidden>Thanks. You are still on the list.</p>
+      <dl class="summary" id="manage-summary"></dl>
+      <div id="manage-active-actions">
+        <button class="button inline-action" id="keep-btn">I am still looking</button>
+        <button class="button secondary inline-action" id="connected-btn">I found a family doctor</button>
+      </div>
+      <h2>Delete your data</h2>
+      <p>This deletes your email, phone number and answers right away. You will not hear from us again.</p>
+      <button class="button danger" id="delete-btn">Delete my data</button>
+    </section>
+  </div></div>
+
+  <div class="view" id="view-privacy-notice" hidden>
+    <div class="container narrow page-body">
+<article class="card prose">
+  <h1>Privacy notice</h1>
+  <p class="hint">Version 2026-11-v1</p>
+
+  <p>OpenPanel helps people in Ontario find a family doctor. This notice explains what we collect, why,
+    who sees it and when we delete it. We follow Canada's federal privacy law for businesses (PIPEDA).</p>
+
+  <h2>What we collect</h2>
+  <ul>
+    <li><strong>Contact details:</strong> your email, and your phone number if you give it.</li>
+    <li><strong>Location:</strong> your postal code and how far you can travel.</li>
+    <li><strong>About the search:</strong> who needs a doctor, an age group, household size, whether you would
+      take spots for only part of your household, preferred language, how long
+      you have been without a family doctor, whether you have an Ontario health card, and whether you are registered with
+      Health Care Connect.</li>
+    <li><strong>Optional need answers:</strong> yes/no answers about health and access to care, only if you tick them and
+      give separate consent. We never ask for diagnoses or medications.</li>
+    <li><strong>How you heard about us</strong>, if you tell us.</li>
+  </ul>
+  <p>We do not ask for your name or health card number, and we do not store your IP address.</p>
+
+  <h2>Why we use it</h2>
+  <ul>
+    <li>To find family practices within your travel distance that have room for new patients.</li>
+    <li>To email you about openings and about your signup.</li>
+    <li>To decide who hears about an opening first (see below).</li>
+    <li>To count demand by area so we know where to look, using totals that cannot identify you.</li>
+    <li>If you agree, to ask you up to twice how things went after you find a doctor.</li>
+  </ul>
+
+  <h2>Who sees it</h2>
+  <p>We do not share your details with clinics. When a practice tells us it has room, we email you its contact
+    details and you decide whether to contact it. We do not sell your data. Our email and hosting providers process
+    data for us under contract. Your signup data is stored on servers in Canada. Our email provider may process your
+    email address outside Canada in order to deliver messages.</p>
+
+  <h2>How long we keep it</h2>
+  <table>
+    <thead><tr><th>Situation</th><th>What happens</th></tr></thead>
+    <tbody>
+      <tr><td>You do not confirm your email</td><td>Everything is deleted after 7 days.</td></tr>
+      <tr><td>You are on the list</td><td>We keep your details while you are looking. After 11 months with no
+        activity, we email to ask if you are still looking. If you do not answer within 30 days, we delete your contact
+        details.</td></tr>
+      <tr><td>You find a doctor</td><td>We delete your contact details right away, or after 90 days if you agreed to a
+        follow-up.</td></tr>
+      <tr><td>After contact details are deleted</td><td>We keep the first 3 characters of your postal code, your age
+        group, your answers and dates for up to 24 months to measure and improve the service, then delete them. We
+        protect this information as personal information until it is deleted.</td></tr>
+      <tr><td>Totals</td><td>Monthly counts by area, which cannot identify anyone, are kept.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="priority">How we decide who hears first</h2>
+  <p>When a practice has room for a few patients, we tell the people who need care most first. We give points for:</p>
+  <ul>
+    <li>the health answers you choose to share (capped, so no single answer decides);</li>
+    <li>barriers to getting care, including living in a rural area (also capped);</li>
+    <li>having both a health need and a barrier, since the same condition is riskier when care is hard to reach;</li>
+    <li>infants and adults 75 or older;</li>
+    <li>how long you have been without a family doctor.</li>
+  </ul>
+  <p>Everyone also gains points the longer they wait on our list, so no one is left at the bottom. Ties go to whoever
+    signed up first. If you signed up a family and said you would take spots for some of you, we may offer a practice's
+    openings to part of your family first.</p>
+
+  <h2>Your choices</h2>
+  <ul>
+    <li>Every email we send has a link to update your signup or delete your data right away.</li>
+    <li>You can ask to see or correct the information we hold about you by emailing
+      privacy@example.com.</li>
+    <li>You can withdraw consent at any time. If you withdraw consent to use your need answers, we delete them.</li>
+    <li>If you have a concern we cannot resolve, you can contact the Office of the Privacy Commissioner of Canada.</li>
+  </ul>
+
+  <h2>Contact</h2>
+  <p>OpenPanel (working name)<br>Mailing address to be added, Toronto, ON<br>
+    privacy@example.com</p>
+</article>
+</div>
+  </div>
+
+  <div class="view" id="view-admin" hidden><div class="container page-body">
+    <h1>Demand dashboard</h1>
+    <p class="hint">Counts only. Counts under 5 are shown as &lt;5. No contact details are shown here.</p>
+    <div id="admin-body"></div>
+  </div></div>
+</main>
+
+<footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <p class="footer-brand"><span class="brand-mark" aria-hidden="true"></span>OpenPanel</p>
+        <p>A free, independent service. Not affiliated with the Government of Ontario, Ontario Health or Health Care Connect.</p>
+      </div>
+      <div>
+        <p><strong>Not for emergencies.</strong> Call 911 in an emergency. For health advice, call Health811 (dial 811).</p>
+        <p><a href="#privacy-notice">Privacy notice</a> · OpenPanel (working name) · Mailing address to be added, Toronto, ON ·
+          privacy@example.com</p>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function () {
+  const POSTAL_RE = /^[KLMNP][0-9][ABCEGHJ-NPRSTV-Z] ?[0-9][ABCEGHJ-NPRSTV-Z][0-9]$/;
+  const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+  const MIN_CELL = 5;
+  const HASH_VIEWS = ["home", "privacy-notice", "admin", "inbox"];
+
+  let signups = [];
+  let emails = [];
+  let current = null; // signup being confirmed or managed
+
+  const form = document.getElementById("signup-form");
+  const $ = (sel, root) => (root || document).querySelector(sel);
+  const $$ = (sel, root) => Array.from((root || document).querySelectorAll(sel));
+
+  function show(name) {
+    $$(".view").forEach(v => v.hidden = v.id !== "view-" + name);
+    $$(".preview-bar button[data-go]").forEach(b => b.classList.toggle("active", b.dataset.go === name));
+    if (name === "inbox") renderInbox();
+    if (name === "admin") renderAdmin();
+    if (HASH_VIEWS.includes(name) && location.hash !== "#" + name) {
+      history.replaceState(null, "", "#" + name);
+    }
+    window.scrollTo(0, 0);
+  }
+
+  function message(title, body, hcc) {
+    $("#msg-title").textContent = title;
+    $("#msg-body").textContent = body;
+    $("#msg-hcc").hidden = !hcc;
+    show("message");
+  }
+
+  function labelFor(name, value) {
+    const input = $(`input[name="${name}"][value="${value}"]`);
+    if (input) return input.parentElement.querySelector("span").textContent.trim();
+    const opt = $(`select[name="${name}"] option[value="${value}"]`);
+    return opt ? opt.textContent.trim() : value;
+  }
+
+  // ---------------------------------------------------------------- form
+
+  function clearErrors() {
+    $$(".error", form).forEach(e => e.remove());
+    $$(".has-error", form).forEach(e => e.classList.remove("has-error"));
+  }
+
+  function addError(fieldEl, text) {
+    const container = fieldEl.closest(".field");
+    container.classList.add("has-error");
+    const p = document.createElement("p");
+    p.className = "error";
+    p.textContent = text;
+    const anchor = container.querySelector("legend, label");
+    const hint = container.querySelector(".hint");
+    (hint || anchor).insertAdjacentElement("afterend", p);
+  }
+
+  function radio(name) {
+    const el = $(`input[name="${name}"]:checked`, form);
+    return el ? el.value : "";
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    clearErrors();
+    const errors = [];
+    const err = (el, msg) => { errors.push(msg); addError(el, msg); };
+
+    const email = form.email.value.trim().toLowerCase();
+    if (!EMAIL_RE.test(email)) err(form.email, "Enter a valid email address.");
+
+    let phone = form.phone.value.trim();
+    if (phone) {
+      let d = phone.replace(/\D/g, "");
+      if (d.length === 11 && d[0] === "1") d = d.slice(1);
+      if (d.length !== 10) err(form.phone, "Enter a 10-digit phone number, or leave it blank.");
+      else phone = `${d.slice(0, 3)}-${d.slice(3, 6)}-${d.slice(6)}`;
+    }
+
+    let postal = form.postal_code.value.replace(/\s+/g, "").toUpperCase();
+    if (postal.length === 6) postal = postal.slice(0, 3) + " " + postal.slice(3);
+    if (!POSTAL_RE.test(postal)) err(form.postal_code, "Enter an Ontario postal code, for example M5V 3L9.");
+
+    const radius = parseInt(form.radius_km.value, 10);
+    if (!(radius >= 1 && radius <= 25)) err(form.radius_km, "Choose a distance from 1 to 25 km.");
+
+    const required = {
+      for_whom: "Tell us who you are looking for.",
+      split_household: "Choose an option.",
+      age_band: "Choose the age of the person who needs a doctor.",
+      time_without_doctor: "Choose how long it has been.",
+      ohip_status: "Tell us about your health card.",
+      hcc_registered: "Choose an option.",
+    };
+    const answers = {};
+    for (const [name, msg] of Object.entries(required)) {
+      answers[name] = radio(name);
+      if (!answers[name]) err($(`input[name="${name}"]`, form), msg);
+    }
+
+    const household = form.household_size.value.trim();
+    if (household && !(/^\d+$/.test(household) && +household >= 1 && +household <= 12)) {
+      err(form.household_size, "Enter a number from 1 to 12, or leave it blank.");
+    }
+
+    const flags = $$('input[name="need_flags"]:checked', form).map(i => i.value);
+    const healthConsent = form.health_consent.checked;
+    if (flags.length && !healthConsent) {
+      err(form.health_consent, "Tick this box to let us use the health and access answers you chose, or untick those answers.");
+    }
+    if (!form.service_consent.checked) {
+      err(form.service_consent, "We need your consent to use your details for this service.");
+    }
+
+    let banner = $(".error.banner", form);
+    if (errors.length) {
+      if (!banner) {
+        banner = document.createElement("p");
+        banner.className = "error banner";
+        form.prepend(banner);
+      }
+      banner.textContent = "Please fix the highlighted answers below.";
+      banner.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+    if (banner) banner.remove();
+
+    const existing = signups.find(s => s.email === email);
+    if (existing) {
+      addEmail(existing, existing.status === "pending" ? "verify" : "already");
+    } else {
+      const s = {
+        id: Math.random().toString(36).slice(2),
+        email, phone, postal, prefix: postal.slice(0, 3),
+        radius, ...answers,
+        language: form.language.value, referral: form.referral_source.value,
+        flags: healthConsent ? flags : [], feedback: form.feedback_consent.checked,
+        status: "pending", created: new Date(),
+      };
+      signups.push(s);
+      addEmail(s, "verify");
+    }
+    form.reset();
+    updateRadius();
+    show("thanks");
+  });
+
+  // ---------------------------------------------------------------- emails
+
+  function addEmail(signup, kind) {
+    const subjects = {
+      verify: "Confirm your email for OpenPanel",
+      already: "You are already signed up with OpenPanel",
+    };
+    const bodies = {
+      verify: "Thanks for signing up with OpenPanel.\n\nPlease confirm your email so we can start looking for a family doctor near you.\n\nIf you did not sign up, ignore this email and your details will be deleted within 7 days.\n\nWhile you wait, please also register with Health Care Connect, Ontario's free matching service.",
+      already: "Someone tried to sign up for OpenPanel with this email, which is already on our list.\n\nIf it was you, you can update your details or remove yourself using the link below. If it was not you, you can ignore this email.",
+    };
+    emails.unshift({ signupId: signup.id, to: signup.email, kind, subject: subjects[kind], body: bodies[kind] });
+    $("#inbox-count").textContent = emails.length;
+  }
+
+  function renderInbox() {
+    const list = $("#inbox-list");
+    list.innerHTML = "";
+    if (!emails.length) {
+      list.innerHTML = '<p class="hint">No emails yet. Sign up on the signup page first.</p>';
+      return;
+    }
+    emails.forEach(m => {
+      const card = document.createElement("section");
+      card.className = "card email-card";
+      const h = document.createElement("h2"); h.textContent = m.subject;
+      const to = document.createElement("p"); to.className = "hint"; to.textContent = "To: " + m.to;
+      const body = document.createElement("pre"); body.className = "email-body"; body.textContent = m.body;
+      const actions = document.createElement("div"); actions.className = "email-actions";
+      if (m.kind === "verify") {
+        const b = document.createElement("button"); b.className = "button"; b.textContent = "Confirm my email";
+        b.onclick = () => openConfirm(m.signupId); actions.append(b);
+      }
+      const manage = document.createElement("button"); manage.className = "linklike";
+      manage.textContent = "Change your details, stop emails or delete your data";
+      manage.onclick = () => openManage(m.signupId);
+      const foot = document.createElement("p"); foot.className = "hint";
+      foot.textContent = "OpenPanel (working name) · Mailing address to be added, Toronto, ON · privacy@example.com";
+      card.append(h, to, body, actions, foot, manage);
+      list.append(card);
+    });
+  }
+
+  function find(id) { return signups.find(s => s.id === id); }
+
+  function expired() {
+    message("This link has expired", "This link is no longer valid. If you already confirmed, you are all set.");
+  }
+
+  function openConfirm(id) {
+    const s = find(id);
+    if (!s || s.status !== "pending") return expired();
+    current = s;
+    show("confirm");
+  }
+
+  $("#confirm-btn").addEventListener("click", () => {
+    if (!current) return expired();
+    current.status = "active";
+    current.verified = new Date();
+    message("You are on the list",
+      "Thanks for confirming. We will email you when a family practice near you tells us it has room. Please also register with Health Care Connect if you have not already.", true);
+  });
+
+  function openManage(id) {
+    const s = find(id);
+    if (!s) return expired();
+    current = s;
+    const statusText = { active: "On the list", pending: "Waiting for you to confirm your email", connected: "Found a doctor" }[s.status] || s.status;
+    $("#manage-summary").innerHTML = "";
+    [["Email", s.email], ["Area", `${s.prefix}, within ${s.radius} km`], ["Status", statusText]].forEach(([k, v]) => {
+      const dt = document.createElement("dt"); dt.textContent = k;
+      const dd = document.createElement("dd"); dd.textContent = v;
+      $("#manage-summary").append(dt, dd);
+    });
+    $("#manage-active-actions").hidden = s.status !== "active";
+    $("#manage-done").hidden = true;
+    show("manage");
+  }
+
+  $("#keep-btn").addEventListener("click", () => { $("#manage-done").hidden = false; });
+
+  $("#connected-btn").addEventListener("click", () => {
+    if (current.feedback) current.status = "connected";
+    else { current.status = "deidentified"; current.email = null; }
+    message("Congratulations", "We are glad you found a family doctor. We have taken you off the list and will not email you about openings.");
+  });
+
+  $("#delete-btn").addEventListener("click", () => {
+    signups = signups.filter(s => s !== current);
+    emails = emails.filter(m => m.signupId !== current.id);
+    $("#inbox-count").textContent = emails.length;
+    current = null;
+    message("Your data has been deleted", "We have deleted your email, phone number and answers. You will not hear from us again.");
+  });
+
+  // ---------------------------------------------------------------- admin
+
+  function suppress(n) { return n > 0 && n < MIN_CELL ? "<" + MIN_CELL : String(n); }
+
+  function table(title, rows) {
+    const sec = document.createElement("section");
+    sec.className = "card";
+    const h = document.createElement("h2"); h.textContent = title; sec.append(h);
+    if (!rows.length) { const p = document.createElement("p"); p.className = "hint"; p.textContent = "No data yet."; sec.append(p); return sec; }
+    const t = document.createElement("table");
+    t.innerHTML = '<thead><tr><th>Answer</th><th class="num">Count</th></tr></thead>';
+    const tb = document.createElement("tbody");
+    rows.forEach(([label, n]) => {
+      const tr = document.createElement("tr");
+      const a = document.createElement("td"); a.textContent = label;
+      const b = document.createElement("td"); b.className = "num"; b.textContent = n;
+      tr.append(a, b); tb.append(tr);
+    });
+    t.append(tb); sec.append(t);
+    return sec;
+  }
+
+  function countBy(list, fn) {
+    const m = new Map();
+    list.forEach(x => [].concat(fn(x)).filter(Boolean).forEach(k => m.set(k, (m.get(k) || 0) + 1)));
+    return [...m.entries()].sort((a, b) => b[1] - a[1]);
+  }
+
+  function renderAdmin() {
+    const body = $("#admin-body");
+    body.innerHTML = "";
+    const active = signups.filter(s => s.status === "active");
+    body.append(table("Totals", [
+      ["Active (confirmed, still looking)", String(active.length)],
+      ["Waiting for email confirmation", String(signups.filter(s => s.status === "pending").length)],
+      ["Connected", String(signups.filter(s => s.status === "connected").length)],
+      ["De-identified", String(signups.filter(s => s.status === "deidentified").length)],
+    ]));
+    const grid = document.createElement("div"); grid.className = "grid";
+    const flagLabel = v => $(`input[name="need_flags"][value="${v}"]`).parentElement.querySelector("span").textContent.trim();
+    const sections = [
+      ["Active signups by postal prefix", countBy(active, s => s.prefix)],
+      ["Age group", countBy(active, s => labelFor("age_band", s.age_band))],
+      ["Would split a household", countBy(active, s => labelFor("split_household", s.split_household))],
+      ["Time without a family doctor", countBy(active, s => labelFor("time_without_doctor", s.time_without_doctor))],
+      ["Need answers (active, with consent)", countBy(active, s => s.flags.map(flagLabel))],
+      ["Health card", countBy(active, s => labelFor("ohip_status", s.ohip_status))],
+      ["Registered with Health Care Connect", countBy(active, s => labelFor("hcc_registered", s.hcc_registered))],
+      ["Preferred language", countBy(active, s => s.language && labelFor("language", s.language))],
+      ["How they heard about us", countBy(active, s => s.referral && labelFor("referral_source", s.referral))],
+    ];
+    sections.forEach(([title, rows]) => grid.append(table(title, rows.map(([k, n]) => [k, suppress(n)]))));
+    body.append(grid);
+  }
+
+  // ---------------------------------------------------------------- navigation
+
+  const range = form.radius_km;
+  const radiusOut = document.getElementById("radius-value");
+  function updateRadius() {
+    radiusOut.textContent = range.value + " km";
+    range.style.setProperty("--fill", ((range.value - range.min) / (range.max - range.min)) * 100 + "%");
+  }
+  range.addEventListener("input", updateRadius);
+  updateRadius();
+
+  $$("[data-go]").forEach(b => b.addEventListener("click", () => show(b.dataset.go)));
+  $("#reset").addEventListener("click", () => {
+    signups = []; emails = []; current = null;
+    $("#inbox-count").textContent = "0";
+    form.reset(); clearErrors(); updateRadius();
+    const banner = $(".error.banner", form); if (banner) banner.remove();
+    show("home");
+  });
+
+  function route() {
+    const name = location.hash.slice(1);
+    if (HASH_VIEWS.includes(name)) return show(name);
+    const anchor = name && document.getElementById(name);
+    if (anchor && anchor.closest("#view-home")) {
+      $$(".view").forEach(v => v.hidden = v.id !== "view-home");
+      $$(".preview-bar button[data-go]").forEach(b => b.classList.toggle("active", b.dataset.go === "home"));
+      anchor.scrollIntoView({ block: "start" });
+      return;
+    }
+    show("home");
+  }
+  window.addEventListener("hashchange", route);
+  route();
+})();
+</script>
+</body>
+</html>

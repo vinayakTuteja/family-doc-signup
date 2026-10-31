@@ -60,6 +60,7 @@ VALID = {
     "radius_km": "5",
     "for_whom": "self",
     "household_size": "2",
+    "split_household": "yes",
     "age_band": "18_64",
     "language": "pa",
     "time_without_doctor": "2_5y",
@@ -80,7 +81,7 @@ def signup(client, **overrides):
 def test_home_page_renders(client):
     r = client.get("/")
     assert r.status_code == 200
-    assert "Find a family doctor near you" in r.text
+    assert "second job" in r.text and 'type="range"' in r.text
     assert "Health Care Connect" in r.text
     assert r.headers["Referrer-Policy"] == "no-referrer"
 
@@ -97,6 +98,7 @@ def test_signup_stores_contact_and_profile_separately(client):
     assert profile["postal_prefix"] == "M5V"
     assert profile["need_flags"] == "newcomer,ongoing_condition"
     assert profile["status"] == "pending"
+    assert profile["radius_km"] == 5 and profile["split_household"] == "yes"
     assert "email" not in profile.keys()
     consent = conn.execute("SELECT * FROM consent_log").fetchone()
     assert consent["scopes"] == "service,health"
@@ -120,6 +122,9 @@ def test_flags_without_consent_asks_user(client):
     ("email", "not-an-email"),
     ("phone", "12345"),
     ("radius_km", "100"),
+    ("radius_km", "0"),
+    ("radius_km", "abc"),
+    ("split_household", ""),
     ("service_consent", ""),
 ])
 def test_validation_errors(client, field, value):
@@ -297,3 +302,23 @@ def test_dev_outbox_only_in_dev_mode(client, monkeypatch):
     r = client.get("/dev/outbox")
     assert r.status_code == 200
     assert "Confirm your email" in r.text and '<a href="http://localhost:8000/verify/' in r.text
+
+
+def test_combined_need_and_barrier_bonus_and_rural():
+    now = datetime(2027, 1, 1, tzinfo=timezone.utc)
+    clinical_only = scoring.priority_score({"ongoing_condition"}, "18_64", "lt_6m", now, now)
+    barrier_only = scoring.priority_score({"no_transport"}, "18_64", "lt_6m", now, now)
+    both = scoring.priority_score({"ongoing_condition", "no_transport"}, "18_64", "lt_6m", now, now)
+    assert both == clinical_only + barrier_only + scoring.COMBINED_BONUS
+    urban = scoring.priority_score({"ongoing_condition"}, "18_64", "lt_6m", now, now, postal_prefix="M5V")
+    rural = scoring.priority_score({"ongoing_condition"}, "18_64", "lt_6m", now, now, postal_prefix="K0K")
+    assert rural == urban + scoring.RURAL_POINTS + scoring.COMBINED_BONUS
+    # Access points are capped.
+    all_access = scoring.priority_score(set(scoring.ACCESS_POINTS), "18_64", "lt_6m", now, now)
+    assert all_access == scoring.ACCESS_CAP
+
+
+def test_every_need_flag_has_a_weight():
+    from app import questions as q
+    weighted = set(scoring.CLINICAL_POINTS) | set(scoring.ACCESS_POINTS)
+    assert q.NEED_FLAG_KEYS == weighted
