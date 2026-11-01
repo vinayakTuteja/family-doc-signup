@@ -106,6 +106,9 @@
 <footer class="site-footer"><!--FOOTER--></footer>
 
 <script>
+/*APPJS*/
+</script>
+<script>
 (function () {
   const POSTAL_RE = /^[KLMNP][0-9][ABCEGHJ-NPRSTV-Z] ?[0-9][ABCEGHJ-NPRSTV-Z][0-9]$/;
   const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
@@ -250,6 +253,7 @@
     }
     form.reset();
     updateRadius();
+    if (window.signupSteps) window.signupSteps.reset();
     show("thanks");
   });
 
@@ -420,6 +424,7 @@
     signups = []; emails = []; current = null;
     $("#inbox-count").textContent = "0";
     form.reset(); clearErrors(); updateRadius();
+    if (window.signupSteps) window.signupSteps.reset();
     const banner = $(".error.banner", form); if (banner) banner.remove();
     show("home");
   });

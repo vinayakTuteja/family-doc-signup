@@ -34,7 +34,8 @@ home = home.replace('method="post" action="/signup#signup"', 'id="signup-form"')
 assert 'id="signup-form"' in home
 
 tpl = open(os.path.join(HERE, "shell.html")).read()
-out = (tpl.replace("/*CSS*/", css).replace("<!--HOME-->", home)
+appjs = open("app/static/app.js").read()
+out = (tpl.replace("/*CSS*/", css).replace("/*APPJS*/", appjs).replace("<!--HOME-->", home)
           .replace("<!--PRIVACY-->", privacy).replace("<!--FOOTER-->", footer))
 open(os.path.join(HERE, "index.html"), "w").write(out)
 print("ok", len(out))

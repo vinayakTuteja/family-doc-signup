@@ -60,12 +60,13 @@ h1, h2, h3 { letter-spacing: -0.022em; line-height: 1.1; margin: 0 0 14px; }
   border-bottom: 1px solid rgba(15, 23, 20, 0.08);
 }
 .header-row { display: flex; align-items: center; justify-content: space-between; height: 62px; gap: 16px; }
-.brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.15rem; color: var(--ink); text-decoration: none; letter-spacing: -0.02em; }
+.brand { display: inline-flex; align-items: center; font-weight: 700; font-size: 1.15rem; color: var(--ink); text-decoration: none; letter-spacing: -0.02em; }
 .brand-mark {
-  width: 22px; height: 22px; border-radius: 7px; flex: none;
+  width: 22px; height: 22px; border-radius: 7px; flex: none; margin-right: 10px;
   background: conic-gradient(from 210deg, var(--green-500), var(--teal-400), var(--amber), var(--green-500));
 }
-.nav { display: flex; align-items: center; gap: 22px; font-size: 0.92rem; }
+.nav { display: flex; align-items: center; font-size: 0.92rem; }
+.nav a { margin-left: 22px; }
 .nav a { color: var(--ink-soft); text-decoration: none; }
 .nav a:hover { color: var(--ink); }
 .nav-cta { background: var(--ink); color: #fff !important; padding: 8px 16px; border-radius: 999px; font-weight: 600; }
@@ -80,21 +81,22 @@ h1, h2, h3 { letter-spacing: -0.022em; line-height: 1.1; margin: 0 0 14px; }
     linear-gradient(160deg, var(--green-950) 0%, var(--green-900) 45%, var(--green-700) 100%);
 }
 .hero::after {
-  content: ""; position: absolute; inset: 0; pointer-events: none;
+  content: ""; position: absolute; top: 0; right: 0; bottom: 0; left: 0; pointer-events: none;
   background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
-  background-size: 22px 22px; mask-image: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent 80%);
+  background-size: 22px 22px; -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent 80%); mask-image: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent 80%);
 }
 .hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.5fr 1fr; gap: 48px; align-items: end; padding-top: 110px; padding-bottom: 110px; }
 .eyebrow { display: inline-block; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.02em; color: #c9f1e4; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); padding: 6px 12px; border-radius: 999px; margin: 0 0 22px; }
-.hero h1 { font-size: clamp(2.5rem, 5.6vw, 4.4rem); font-weight: 750; letter-spacing: -0.035em; margin-bottom: 22px; max-width: 13ch; }
-.lede { font-size: clamp(1.1rem, 1.6vw, 1.3rem); color: rgba(255, 255, 255, 0.86); max-width: 34em; margin: 0 0 32px; }
-.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.hero h1 { font-size: 2.6rem; font-size: clamp(2.5rem, 5.6vw, 4.4rem); font-weight: 750; letter-spacing: -0.035em; margin-bottom: 22px; max-width: 13ch; }
+.lede { font-size: 1.15rem; font-size: clamp(1.1rem, 1.6vw, 1.3rem); color: rgba(255, 255, 255, 0.86); max-width: 34em; margin: 0 0 32px; }
+.hero-actions { display: flex; flex-wrap: wrap; }
+.hero-actions .button { margin: 0 12px 12px 0; }
 .hero-stat {
   background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.18);
   backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
   border-radius: var(--radius-lg); padding: 30px 30px 26px;
 }
-.stat-number { font-size: clamp(3.4rem, 7vw, 5.2rem); font-weight: 800; letter-spacing: -0.045em; line-height: 1; margin: 0 0 10px;
+.stat-number { font-size: 4rem; font-size: clamp(3.4rem, 7vw, 5.2rem); font-weight: 800; letter-spacing: -0.045em; line-height: 1; margin: 0 0 10px;
   background: linear-gradient(90deg, #fff, var(--amber)); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .stat-label { font-size: 1.15rem; margin: 0 0 14px; color: #fff; }
 .stat-source { font-size: 0.8rem; color: rgba(255, 255, 255, 0.6); margin: 0; }
@@ -103,7 +105,7 @@ h1, h2, h3 { letter-spacing: -0.022em; line-height: 1.1; margin: 0 0 14px; }
 .section { padding: 104px 0; }
 .section.tinted { background: var(--mist); }
 .section-eyebrow { color: var(--green-500); font-weight: 700; font-size: 0.9rem; letter-spacing: 0.04em; text-transform: uppercase; margin: 0 0 12px; }
-.section-title { font-size: clamp(2rem, 4vw, 3.1rem); font-weight: 750; letter-spacing: -0.03em; max-width: 18ch; }
+.section-title { font-size: 2.2rem; font-size: clamp(2rem, 4vw, 3.1rem); font-weight: 750; letter-spacing: -0.03em; max-width: 18ch; }
 .section-lede { font-size: 1.18rem; color: var(--muted); max-width: 38em; margin: 0 0 40px; }
 .section-link { margin: 28px 0 0; font-weight: 600; }
 .section-link a::after { content: " \2192"; }
@@ -165,7 +167,7 @@ h1, h2, h3 { letter-spacing: -0.022em; line-height: 1.1; margin: 0 0 14px; }
 
 .field { margin: 0 0 26px; border: 0; padding: 0; min-width: 0; }
 .field:last-child { margin-bottom: 0; }
-legend, .field > label { font-weight: 650; display: block; margin-bottom: 8px; padding: 0; }
+legend, .field > label:not(.choice) { font-weight: 650; display: block; margin-bottom: 8px; padding: 0; }
 .optional { font-weight: 400; color: var(--muted); }
 .hint { color: var(--muted); font-size: 0.92rem; margin: -2px 0 10px; }
 
@@ -182,18 +184,19 @@ input.short { max-width: 170px; }
 .choices.tiles { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
 .choices.stack, .choices.checks { grid-template-columns: 1fr; }
 .choice {
-  display: flex; gap: 12px; align-items: flex-start; font-weight: 450; cursor: pointer; margin: 0;
+  display: flex; align-items: flex-start; font-weight: 450; cursor: pointer; margin: 0;
   border: 1.5px solid var(--line); border-radius: 14px; padding: 13px 15px; background: #fff;
   transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
 }
 .choice:hover { border-color: #b9c6bf; }
-.choice:has(input:checked) { border-color: var(--green-500); background: var(--mint); box-shadow: 0 0 0 3px rgba(29, 143, 106, 0.12); }
-.choice input { margin-top: 0.22em; width: 18px; height: 18px; flex: none; accent-color: var(--green-700); }
+.choice.is-checked, .choice:has(input:checked) { border-color: var(--green-500); background: var(--mint); box-shadow: 0 0 0 3px rgba(29, 143, 106, 0.12); }
+.choice input { margin: 0.22em 12px 0 0; width: 18px; height: 18px; flex: none; accent-color: var(--green-700); }
 .consent .choice { background: var(--mist); }
 .consent { margin-bottom: 14px; }
 
 /* radius slider */
-.radius-row { display: flex; align-items: center; gap: 18px; max-width: 560px; }
+.radius-row { display: flex; align-items: center; max-width: 560px; }
+.radius-row .radius-value { margin-left: 18px; }
 .radius-value { flex: none; min-width: 78px; text-align: center; font-weight: 800; font-size: 1.15rem; color: var(--green-900); background: var(--mint); border-radius: 999px; padding: 6px 12px; }
 input[type="range"] {
   --fill: 16.6%;
@@ -214,9 +217,31 @@ input[type="range"]::-moz-range-track { background: transparent; }
 .success.banner { background: var(--mint); color: var(--green-900); font-weight: 650; }
 .hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
 
+/* step-by-step mode (added by app.js; without JavaScript every question shows) */
+.q-title { display: block; font-size: 1.3rem; font-weight: 700; letter-spacing: -0.015em; line-height: 1.3; margin: 0 0 10px; color: var(--ink); }
+.step-progress, .step-nav { display: none; }
+form.js-steps .step-progress { display: block; margin: 0 0 16px; }
+form.js-steps .step-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; }
+form.js-steps .q-step { display: none; }
+form.js-steps .q-step.is-active { display: block; -webkit-animation: stepIn 0.28s ease; animation: stepIn 0.28s ease; }
+form.js-steps .q-title { font-size: 1.55rem; margin-bottom: 12px; }
+form.js-steps .q-step .field { margin-bottom: 18px; }
+form.js-steps .q-step .field:last-child { margin-bottom: 0; }
+form.js-steps .form-card { padding: 34px; min-height: 260px; }
+.step-progress-text { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--muted); margin-bottom: 8px; }
+.step-section { font-weight: 700; color: var(--green-700); }
+.step-progress-bar { height: 6px; background: #e3e9e5; border-radius: 999px; overflow: hidden; }
+.step-progress-fill { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--green-500), var(--teal-400)); border-radius: 999px; transition: width 0.3s ease; }
+.step-back { background: none; border: 0; font: inherit; font-weight: 600; color: var(--muted); padding: 12px 4px; cursor: pointer; }
+.step-back:hover { color: var(--ink); }
+.step-next { min-width: 140px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
+@-webkit-keyframes stepIn { from { opacity: 0; -webkit-transform: translateY(8px); } to { opacity: 1; -webkit-transform: none; } }
+@keyframes stepIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
 /* ------------------------------------------------------------------ inner pages */
 .page-body { padding-top: 64px; padding-bottom: 80px; }
-.page-body h1 { font-size: clamp(2rem, 4vw, 2.7rem); font-weight: 750; }
+.page-body h1 { font-size: 2.2rem; font-size: clamp(2rem, 4vw, 2.7rem); font-weight: 750; }
 .card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 30px; margin-bottom: 18px; box-shadow: var(--shadow); }
 .message { max-width: 640px; }
 .note { background: var(--mint); border-left: 5px solid var(--green-500); padding: 14px 18px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
@@ -238,7 +263,7 @@ th { color: var(--muted); font-weight: 600; }
 .site-footer a { color: #c9f1e4; }
 .footer-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 40px; }
 .footer-grid p { margin: 0 0 10px; }
-.footer-brand { display: inline-flex; align-items: center; gap: 10px; color: #fff; font-weight: 700; font-size: 1.1rem; }
+.footer-brand { display: inline-flex; align-items: center; color: #fff; font-weight: 700; font-size: 1.1rem; }
 
 /* ------------------------------------------------------------------ responsive */
 @media (max-width: 900px) {
@@ -253,10 +278,20 @@ th { color: var(--muted); font-weight: 600; }
   .form-card, .card, .feature-card, .step-card { padding: 22px; }
   .story-card { padding: 30px 24px; }
   .choices.tiles { grid-template-columns: 1fr 1fr; }
+  form.js-steps .form-card { padding: 24px 20px; min-height: 0; }
+  form.js-steps .step-nav {
+    position: -webkit-sticky; position: sticky; bottom: 0; z-index: 5;
+    margin: 0 -18px; padding: 12px 18px calc(12px + env(safe-area-inset-bottom, 0px));
+    background: rgba(255, 255, 255, 0.96); border-top: 1px solid var(--line);
+  }
+  form.js-steps.is-final .step-nav { position: static; border-top: 0; background: transparent; }
+  form.js-steps .q-title { font-size: 1.3rem; }
+  .step-next { min-width: 120px; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .button { transition: none; }
+  form.js-steps .q-step.is-active { -webkit-animation: none; animation: none; }
 }
 
 
@@ -412,7 +447,7 @@ th { color: var(--muted); font-weight: 600; }
   <div class="container narrow">
     <p class="section-eyebrow">Sign up</p>
     <h2 class="section-title">Let us start looking for you.</h2>
-    <p class="section-lede">About 3 minutes. Questions marked optional can be skipped.</p>
+    <p class="section-lede">About 3 minutes, one question at a time. Optional questions can be skipped.</p>
 
     <form class="signup" id="signup-form" novalidate>
       
@@ -421,32 +456,43 @@ th { color: var(--muted); font-weight: 600; }
         <label>Leave this empty <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
       </div>
 
-      <section class="form-card">
-        <div class="form-card-head"><span class="form-step">1</span><h3>How to reach you</h3></div>
+      <div class="step-progress" aria-hidden="true">
+        <div class="step-progress-text"><span class="step-section"></span><span class="step-count"></span></div>
+        <div class="step-progress-bar"><span class="step-progress-fill"></span></div>
+      </div>
+      <p class="sr-only" aria-live="polite" id="step-announce"></p>
+
+      <div class="q-step form-card" data-section="How to reach you">
         <div class="field ">
-          <label for="email">Email</label>
+          <label for="email" class="q-title">What is your email?</label>
+          <p class="hint">We will use it to tell you when a practice near you has room.</p>
           
-          <input id="email" name="email" type="email" autocomplete="email" required placeholder="you@example.com" value="">
+          <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required placeholder="you@example.com" value="">
         </div>
+      </div>
+
+      <div class="q-step form-card" data-section="How to reach you" data-optional="true">
         <div class="field ">
-          <label for="phone">Phone <span class="optional">(optional)</span></label>
+          <label for="phone" class="q-title">Phone number <span class="optional">(optional)</span></label>
           <p class="hint">Only used if we cannot reach you by email.</p>
           
-          <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="416-555-0123" value="">
+          <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="416-555-0123" value="">
         </div>
-      </section>
+      </div>
 
-      <section class="form-card">
-        <div class="form-card-head"><span class="form-step">2</span><h3>Where you are</h3></div>
+      <div class="q-step form-card" data-section="Where you are">
         <div class="field ">
-          <label for="postal_code">Postal code</label>
+          <label for="postal_code" class="q-title">What is your postal code?</label>
           <p class="hint">Used to find practices near you. We never share it with clinics.</p>
           
-          <input id="postal_code" name="postal_code" autocomplete="postal-code" maxlength="7" class="short" required placeholder="M5V 3L9" value="">
+          <input id="postal_code" name="postal_code" autocomplete="postal-code" autocapitalize="characters" maxlength="7" class="short" required placeholder="M5V 3L9" value="">
         </div>
-        
+      </div>
+
+      
+      <div class="q-step form-card" data-section="Where you are">
         <div class="field radius-field ">
-          <label for="radius_km">How far can you travel to a family doctor?</label>
+          <label for="radius_km" class="q-title">How far can you travel to a family doctor?</label>
           <p class="hint">Drag to set your distance. A wider distance usually means a faster match.</p>
           
           <div class="radius-row">
@@ -457,12 +503,11 @@ th { color: var(--muted); font-weight: 600; }
             <span>1 km</span><span>5 km</span><span>10 km</span><span>15 km</span><span>20 km</span><span>25 km</span>
           </div>
         </div>
-      </section>
+      </div>
 
-      <section class="form-card">
-        <div class="form-card-head"><span class="form-step">3</span><h3>Who needs a doctor</h3></div>
+      <div class="q-step form-card" data-section="Who needs a doctor" data-auto="true">
         <fieldset class="field ">
-    <legend>Who are you looking for?</legend>
+    <legend class="q-title">Who are you looking for?</legend>
     
     
     <div class="choices tiles">
@@ -477,13 +522,19 @@ th { color: var(--muted); font-weight: 600; }
     
     </div>
   </fieldset>
+      </div>
+
+      <div class="q-step form-card" data-section="Who needs a doctor" data-optional="true" data-show-if="for_whom=household">
         <div class="field ">
-          <label for="household_size">How many people in total? <span class="optional">(optional)</span></label>
+          <label for="household_size" class="q-title">How many people in total? <span class="optional">(optional)</span></label>
           
-          <input id="household_size" name="household_size" type="number" min="1" max="12" class="short" value="">
+          <input id="household_size" name="household_size" type="number" inputmode="numeric" min="1" max="12" class="short" value="">
         </div>
+      </div>
+
+      <div class="q-step form-card" data-section="Who needs a doctor" data-auto="true" data-show-if="for_whom=household" data-default-hidden="split_household=single">
         <fieldset class="field ">
-    <legend>If a practice has room for only some of the people you are signing up, would you take those spots?</legend>
+    <legend class="q-title">If a practice has room for only some of you, would you take those spots?</legend>
     <p class="hint">For example, a practice can take 2 new patients but you are a family of 4.</p>
     
     <div class="choices stack">
@@ -496,8 +547,11 @@ th { color: var(--muted); font-weight: 600; }
     
     </div>
   </fieldset>
+      </div>
+
+      <div class="q-step form-card" data-section="Who needs a doctor" data-auto="true">
         <fieldset class="field ">
-    <legend>Age of the person who needs a doctor</legend>
+    <legend class="q-title">How old is the person who needs a doctor?</legend>
     <p class="hint">If you are signing up more than one person, choose the age of whoever needs care most.</p>
     
     <div class="choices tiles">
@@ -514,8 +568,11 @@ th { color: var(--muted); font-weight: 600; }
     
     </div>
   </fieldset>
+      </div>
+
+      <div class="q-step form-card" data-section="Who needs a doctor" data-optional="true">
         <div class="field">
-          <label for="language">Preferred language for care <span class="optional">(optional)</span></label>
+          <label for="language" class="q-title">Preferred language for care <span class="optional">(optional)</span></label>
           <select id="language" name="language">
             <option value="">Choose one</option>
             
@@ -557,12 +614,11 @@ th { color: var(--muted); font-weight: 600; }
             
           </select>
         </div>
-      </section>
+      </div>
 
-      <section class="form-card">
-        <div class="form-card-head"><span class="form-step">4</span><h3>Your situation</h3></div>
+      <div class="q-step form-card" data-section="Your situation" data-auto="true">
         <fieldset class="field ">
-    <legend>How long have you been without a family doctor?</legend>
+    <legend class="q-title">How long have you been without a family doctor?</legend>
     
     
     <div class="choices tiles">
@@ -581,8 +637,11 @@ th { color: var(--muted); font-weight: 600; }
     
     </div>
   </fieldset>
+      </div>
+
+      <div class="q-step form-card" data-section="Your situation" data-auto="true">
         <fieldset class="field ">
-    <legend>Do you have an Ontario health card (OHIP)?</legend>
+    <legend class="q-title">Do you have an Ontario health card (OHIP)?</legend>
     <p class="hint">Most family practices need a valid health card to take you on.</p>
     
     <div class="choices stack">
@@ -595,9 +654,12 @@ th { color: var(--muted); font-weight: 600; }
     
     </div>
   </fieldset>
+      </div>
+
+      <div class="q-step form-card" data-section="Your situation" data-auto="true">
         <fieldset class="field ">
-    <legend>Are you registered with Health Care Connect?</legend>
-    
+    <legend class="q-title">Are you registered with Health Care Connect?</legend>
+    <p class="hint">Ontario&#39;s free matching service. Signing up for both is a good idea.</p>
     
     <div class="choices tiles">
     
@@ -609,15 +671,14 @@ th { color: var(--muted); font-weight: 600; }
     
     </div>
   </fieldset>
-      </section>
+      </div>
 
-      <section class="form-card">
-        <div class="form-card-head"><span class="form-step">5</span><h3>Anything that makes care more urgent <span class="optional">(optional)</span></h3></div>
-        <p class="hint">These answers help us tell people with greater need about openings first. Tick any that apply to
-          anyone you are signing up, or skip this section. We never share these answers with clinics.</p>
-        
+      
+      <div class="q-step form-card" data-section="What makes care more urgent" data-optional="true" data-empty-label="None of these">
         <fieldset class="field">
-          <legend>Health</legend>
+          <legend class="q-title">Do any of these apply? <span class="optional">(optional)</span></legend>
+          <p class="hint">Health needs help us tell people who need care most about openings first. Tick any that
+            apply to anyone you are signing up. We never share these answers with clinics.</p>
           <div class="choices checks">
           
           <label class="choice"><input type="checkbox" name="need_flags" value="ongoing_condition" > <span>An ongoing health condition that needs regular care (e.g. diabetes, heart disease, COPD, kidney disease etc.)</span></label>
@@ -638,8 +699,12 @@ th { color: var(--muted); font-weight: 600; }
           
           </div>
         </fieldset>
+      </div>
+
+      <div class="q-step form-card" data-section="What makes care more urgent" data-optional="true" data-empty-label="None of these">
         <fieldset class="field">
-          <legend>Access to care</legend>
+          <legend class="q-title">Is anything making it harder to get care? <span class="optional">(optional)</span></legend>
+          <p class="hint">Tick any that apply, or skip. We never share these answers with clinics.</p>
           <div class="choices checks">
           
           <label class="choice"><input type="checkbox" name="need_flags" value="newcomer" > <span>Arrived in Canada in the last 3 years (e.g. as an immigrant, refugee, international student etc.)</span></label>
@@ -660,32 +725,22 @@ th { color: var(--muted); font-weight: 600; }
           
           </div>
         </fieldset>
+      </div>
+
+      <div class="q-step form-card" data-section="What makes care more urgent" data-show-if="has_flags">
         <div class="field consent ">
+          <p class="q-title">Can we use those answers?</p>
           
           <label class="choice"><input type="checkbox" name="health_consent" value="yes" >
-            <span>I agree that OpenPanel can use the answers I ticked in this section to decide who is told
-              about openings first. Needed only if you ticked something above.</span></label>
+            <span>I agree that OpenPanel can use the answers I ticked to decide who is told about openings
+              first. Needed only if you ticked something.</span></label>
+          <p class="hint"><a href="#privacy-notice">How we decide who hears first</a></p>
         </div>
-        <p class="hint"><a href="#privacy-notice">How we decide who hears first</a></p>
-      </section>
+      </div>
 
-      <section class="form-card">
-        <div class="form-card-head"><span class="form-step">6</span><h3>Your consent</h3></div>
-        <div class="field consent ">
-          
-          <label class="choice"><input type="checkbox" name="service_consent" value="yes" required >
-            <span>I agree that OpenPanel can use my email, phone number (if given), postal code and answers to
-              look for a family practice with room near me and to email me about it. OpenPanel will not
-              share my details with clinics. I can delete my data at any time. I have read the
-              <a href="#privacy-notice">privacy notice</a>.</span></label>
-        </div>
-        <div class="field consent">
-          <label class="choice"><input type="checkbox" name="feedback_consent" value="yes" >
-            <span><span class="optional">Optional:</span> after I find a doctor, OpenPanel may email me up to
-              twice to ask how it went. My contact details are kept for up to 90 days for this, then deleted.</span></label>
-        </div>
+      <div class="q-step form-card" data-section="Almost done" data-optional="true">
         <div class="field">
-          <label for="referral_source">How did you hear about us? <span class="optional">(optional)</span></label>
+          <label for="referral_source" class="q-title">How did you hear about us? <span class="optional">(optional)</span></label>
           <select id="referral_source" name="referral_source">
             
             <option value="" >Choose one (optional)</option>
@@ -706,9 +761,31 @@ th { color: var(--muted); font-weight: 600; }
             
           </select>
         </div>
-        <button type="submit" class="button primary large">Sign up free</button>
+      </div>
+
+      <div class="q-step form-card" data-section="Almost done" data-final="true">
+        <p class="q-title">Last step: your consent</p>
+        <div class="field consent ">
+          
+          <label class="choice"><input type="checkbox" name="service_consent" value="yes" required >
+            <span>I agree that OpenPanel can use my email, phone number (if given), postal code and answers to
+              look for a family practice with room near me and to email me about it. OpenPanel will not
+              share my details with clinics. I can delete my data at any time. I have read the
+              <a href="#privacy-notice">privacy notice</a>.</span></label>
+        </div>
+        <div class="field consent">
+          <label class="choice"><input type="checkbox" name="feedback_consent" value="yes" >
+            <span><span class="optional">Optional:</span> after I find a doctor, OpenPanel may email me up to
+              twice to ask how it went. My contact details are kept for up to 90 days for this, then deleted.</span></label>
+        </div>
+        <button type="submit" class="button primary large submit-button">Sign up free</button>
         <p class="hint">We will email you a link to confirm. You are not on the list until you click it.</p>
-      </section>
+      </div>
+
+      <div class="step-nav">
+        <button type="button" class="step-back">Back</button>
+        <button type="button" class="button primary step-next">Next</button>
+      </div>
     </form>
   </div>
 </section>
@@ -871,6 +948,323 @@ th { color: var(--muted); font-weight: 600; }
   </footer>
 
 <script>
+/*
+ * Progressive enhancements for the signup form.
+ *
+ * Without JavaScript the form shows every question on one page and still works.
+ * With JavaScript it becomes one question per screen. Written in plain ES5 (no
+ * arrow functions, let/const or modern APIs) so it runs on older phones.
+ */
+(function () {
+  "use strict";
+
+  var POSTAL_RE = /^[KLMNP][0-9][ABCEGHJ-NPRSTV-Z] ?[0-9][ABCEGHJ-NPRSTV-Z][0-9]$/;
+  var EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+
+  function each(list, fn) { for (var i = 0; i < list.length; i++) fn(list[i], i); }
+  function closest(el, cls) {
+    while (el && el.nodeType === 1) {
+      if (el.classList && el.classList.contains(cls)) return el;
+      el = el.parentNode;
+    }
+    return null;
+  }
+  function focusQuietly(el) {
+    if (!el) return;
+    try { el.focus({ preventScroll: true }); } catch (e) { el.focus(); }
+  }
+
+  /* ------------------------------------------------------------ radius slider */
+  function setupRadius(root) {
+    var range = root.querySelector("#radius_km");
+    var output = root.querySelector("#radius-value");
+    if (!range || !output) return function () {};
+    function update() {
+      output.textContent = range.value + " km";
+      var pct = ((range.value - range.min) / (range.max - range.min)) * 100;
+      if (range.style.setProperty) range.style.setProperty("--fill", pct + "%");
+    }
+    range.addEventListener("input", update);
+    range.addEventListener("change", update);
+    update();
+    return update;
+  }
+
+  /* ------------------------------------------------- checked-state styling */
+  // Mirrors the CSS :has() rule for browsers that do not support it.
+  function syncChecked(form) {
+    each(form.querySelectorAll(".choice"), function (label) {
+      var input = label.querySelector("input");
+      if (input) label.classList.toggle("is-checked", input.checked);
+    });
+  }
+
+  /* ------------------------------------------------------------ step form */
+  function setupSteps(form, updateRadius) {
+    var steps = form.querySelectorAll(".q-step");
+    if (!steps.length) return null;
+
+    var nav = form.querySelector(".step-nav");
+    var nextBtn = form.querySelector(".step-next");
+    var backBtn = form.querySelector(".step-back");
+    var sectionEl = form.querySelector(".step-section");
+    var countEl = form.querySelector(".step-count");
+    var fillEl = form.querySelector(".step-progress-fill");
+    var announce = document.getElementById("step-announce");
+    var current = 0;
+    var autoTimer = null;
+
+    form.classList.add("js-steps");
+
+    function radioValue(name) {
+      var checked = form.querySelector('input[name="' + name + '"]:checked');
+      return checked ? checked.value : "";
+    }
+
+    function isVisible(step) {
+      var rule = step.getAttribute("data-show-if");
+      if (!rule) return true;
+      if (rule === "has_flags") return !!form.querySelector('input[name="need_flags"]:checked');
+      var parts = rule.split("=");
+      return radioValue(parts[0]) === parts[1];
+    }
+
+    // Steps that are skipped get a sensible default (e.g. a single person cannot be split).
+    function applyDefaults() {
+      each(steps, function (step) {
+        var def = step.getAttribute("data-default-hidden");
+        if (!def) return;
+        var parts = def.split("=");
+        var input = form.querySelector('input[name="' + parts[0] + '"][value="' + parts[1] + '"]');
+        if (!input) return;
+        if (!isVisible(step)) {
+          input.checked = true;
+          step.setAttribute("data-auto-set", "true");
+        } else if (step.getAttribute("data-auto-set") === "true") {
+          input.checked = false;
+          step.removeAttribute("data-auto-set");
+        }
+      });
+      if (!form.querySelector('input[name="need_flags"]:checked')) {
+        var hc = form.querySelector('input[name="health_consent"]');
+        if (hc) hc.checked = false;
+      }
+      syncChecked(form);
+    }
+
+    function visibleSteps() {
+      var list = [];
+      each(steps, function (step, i) { if (isVisible(step)) list.push(i); });
+      return list;
+    }
+
+    function stepIsEmpty(step) {
+      var empty = true;
+      each(step.querySelectorAll("input, select"), function (el) {
+        if (el.type === "checkbox" || el.type === "radio") { if (el.checked) empty = false; }
+        else if (el.type !== "range" && el.value) empty = false;
+      });
+      return empty;
+    }
+
+    /* ---------------- validation (mirrors the server; the server always re-checks) */
+    function clearErrors(step) {
+      each(step.querySelectorAll(".error.js-error"), function (e) { e.parentNode.removeChild(e); });
+      each(step.querySelectorAll(".has-error"), function (e) { e.classList.remove("has-error"); });
+    }
+
+    function addError(el, message) {
+      var field = closest(el, "field");
+      if (!field) return;
+      field.classList.add("has-error");
+      var p = document.createElement("p");
+      p.className = "error js-error";
+      p.setAttribute("role", "alert");
+      p.textContent = message;
+      var anchor = field.querySelector(".hint") || field.querySelector("legend, label, .q-title");
+      if (anchor && anchor.parentNode === field) field.insertBefore(p, anchor.nextSibling);
+      else field.insertBefore(p, field.firstChild);
+    }
+
+    function validate(step) {
+      clearErrors(step);
+      var ok = true;
+      function fail(el, msg) { ok = false; addError(el, msg); }
+
+      var email = step.querySelector("#email");
+      if (email && !EMAIL_RE.test(email.value.trim())) fail(email, "Enter a valid email address.");
+
+      var phone = step.querySelector("#phone");
+      if (phone && phone.value.trim()) {
+        var d = phone.value.replace(/\D/g, "");
+        if (d.length === 11 && d.charAt(0) === "1") d = d.slice(1);
+        if (d.length !== 10) fail(phone, "Enter a 10-digit phone number, or leave it blank.");
+      }
+
+      var postal = step.querySelector("#postal_code");
+      if (postal) {
+        var v = postal.value.replace(/\s+/g, "").toUpperCase();
+        if (v.length === 6) v = v.slice(0, 3) + " " + v.slice(3);
+        if (!POSTAL_RE.test(v)) fail(postal, "Enter an Ontario postal code, for example M5V 3L9.");
+        else postal.value = v;
+      }
+
+      var household = step.querySelector("#household_size");
+      if (household && household.value) {
+        var n = parseInt(household.value, 10);
+        if (!(n >= 1 && n <= 12)) fail(household, "Enter a number from 1 to 12, or leave it blank.");
+      }
+
+      if (step.getAttribute("data-optional") !== "true") {
+        var names = {};
+        each(step.querySelectorAll('input[type="radio"]'), function (r) { names[r.name] = r; });
+        for (var name in names) {
+          if (names.hasOwnProperty(name) && !radioValue(name)) fail(names[name], "Choose an option to continue.");
+        }
+      }
+
+      var hc = step.querySelector('input[name="health_consent"]');
+      if (hc && !hc.checked) fail(hc, "Tick this box to let us use those answers, or go back and untick them.");
+
+      var sc = step.querySelector('input[name="service_consent"]');
+      if (sc && !sc.checked) fail(sc, "We need your consent to use your details for this service.");
+
+      return ok;
+    }
+
+    /* ---------------- navigation */
+    function render() {
+      var visible = visibleSteps();
+      var pos = visible.indexOf(current);
+      each(steps, function (step, i) {
+        var active = i === current;
+        step.classList.toggle("is-active", active);
+        step.setAttribute("aria-hidden", active ? "false" : "true");
+      });
+      var step = steps[current];
+      var isFinal = step.getAttribute("data-final") === "true";
+      form.classList.toggle("is-final", isFinal);
+
+      backBtn.style.visibility = pos > 0 ? "visible" : "hidden";
+      nextBtn.style.display = isFinal ? "none" : "";
+      if (step.getAttribute("data-optional") === "true" && stepIsEmpty(step)) {
+        nextBtn.textContent = step.getAttribute("data-empty-label") || "Skip";
+      } else {
+        nextBtn.textContent = "Next";
+      }
+
+      var label = "Question " + (pos + 1) + " of " + visible.length;
+      if (countEl) countEl.textContent = label;
+      if (sectionEl) sectionEl.textContent = step.getAttribute("data-section") || "";
+      if (fillEl) fillEl.style.width = Math.round(((pos + 1) / visible.length) * 100) + "%";
+      if (announce) announce.textContent = label;
+    }
+
+    function go(index, focus) {
+      current = index;
+      render();
+      var step = steps[current];
+      // Keep the progress bar just under the sticky header so each question starts at the top.
+      var header = document.querySelector(".site-header");
+      var offset = (header ? header.offsetHeight : 0) + 16;
+      var top = form.getBoundingClientRect().top;
+      if (Math.abs(top - offset) > 8) {
+        window.scrollTo(0, top + (window.pageYOffset || document.documentElement.scrollTop) - offset);
+      }
+      if (focus) {
+        var field = step.querySelector('input[type="email"], input[type="tel"], input[type="number"], input:not([type]), input[type="text"]:not([name="website"])');
+        if (field) focusQuietly(field);
+        else {
+          var title = step.querySelector(".q-title");
+          if (title) { title.setAttribute("tabindex", "-1"); focusQuietly(title); }
+        }
+      }
+    }
+
+    function next() {
+      clearTimeout(autoTimer);
+      if (!validate(steps[current])) return;
+      applyDefaults();
+      var visible = visibleSteps();
+      var pos = visible.indexOf(current);
+      if (pos < visible.length - 1) go(visible[pos + 1], true);
+    }
+
+    function back() {
+      clearTimeout(autoTimer);
+      applyDefaults();
+      var visible = visibleSteps();
+      var pos = visible.indexOf(current);
+      if (pos > 0) go(visible[pos - 1], true);
+    }
+
+    nextBtn.addEventListener("click", next);
+    backBtn.addEventListener("click", back);
+
+    form.addEventListener("change", function (e) {
+      syncChecked(form);
+      var step = closest(e.target, "q-step");
+      if (!step) return;
+      clearErrors(step);
+      render();
+      if (e.target.type === "radio" && step.getAttribute("data-auto") === "true" && step === steps[current]) {
+        clearTimeout(autoTimer);
+        autoTimer = setTimeout(next, 260);
+      }
+    });
+
+    form.addEventListener("input", function (e) {
+      var step = closest(e.target, "q-step");
+      if (step === steps[current]) render();
+    });
+
+    form.addEventListener("keydown", function (e) {
+      var key = e.key || e.keyCode;
+      if ((key === "Enter" || key === 13) && e.target.tagName === "INPUT" && e.target.type !== "checkbox" && e.target.type !== "radio") {
+        var step = steps[current];
+        if (step.getAttribute("data-final") !== "true") { e.preventDefault(); next(); }
+      }
+    });
+
+    // Last check before the form is sent; the server validates everything again.
+    form.addEventListener("submit", function (e) {
+      if (!validate(steps[current])) { e.preventDefault(); if (e.stopImmediatePropagation) e.stopImmediatePropagation(); }
+    }, true);
+
+    // After a server-side error, open the first question that needs fixing.
+    var start = 0;
+    var firstError = form.querySelector(".q-step .has-error");
+    if (firstError) {
+      each(steps, function (step, i) { if (step.contains(firstError) && !start) start = i; });
+    }
+    applyDefaults();
+    go(start, false);
+
+    return {
+      reset: function () {
+        each(steps, function (step) { clearErrors(step); step.removeAttribute("data-auto-set"); });
+        applyDefaults();
+        updateRadius();
+        syncChecked(form);
+        go(0, false);
+      }
+    };
+  }
+
+  function init() {
+    var form = document.querySelector("form.signup");
+    if (!form) return;
+    var updateRadius = setupRadius(form);
+    syncChecked(form);
+    window.signupSteps = setupSteps(form, updateRadius);
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+  else init();
+})();
+
+</script>
+<script>
 (function () {
   const POSTAL_RE = /^[KLMNP][0-9][ABCEGHJ-NPRSTV-Z] ?[0-9][ABCEGHJ-NPRSTV-Z][0-9]$/;
   const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
@@ -1015,6 +1409,7 @@ th { color: var(--muted); font-weight: 600; }
     }
     form.reset();
     updateRadius();
+    if (window.signupSteps) window.signupSteps.reset();
     show("thanks");
   });
 
@@ -1185,6 +1580,7 @@ th { color: var(--muted); font-weight: 600; }
     signups = []; emails = []; current = null;
     $("#inbox-count").textContent = "0";
     form.reset(); clearErrors(); updateRadius();
+    if (window.signupSteps) window.signupSteps.reset();
     const banner = $(".error.banner", form); if (banner) banner.remove();
     show("home");
   });
