@@ -7,7 +7,7 @@
   email, phone, website, name similarity and location, with rural FSAs handled separately;
   links chains by shared contact details; writes a review list whose decisions feed back in.
 - GitHub workflow to build the list on demand and monthly.
-- First run: 3,022 sites from the Ministry and Overture.
+- Full run with all three sources: 4,325 sites. Missing FSAs are estimated from the nearest record with a postal code. OpenStreetMap retries across Overpass mirrors.
 
 ## 2026-11-01
 

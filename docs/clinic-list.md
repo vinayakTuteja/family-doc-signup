@@ -76,12 +76,25 @@ runs on the 3rd of every month, after Overture's monthly release.
 | `org_id` | Shared by separate sites that share contact details (chains, multi-site teams) |
 | `needs_location_check` | No postal code and no address in any source |
 
-## First run (Ontario Ministry of Health + Overture, November 2026)
+## Latest full run (all three sources, November 2026)
 
-About 5,150 records loaded. About 1,900 were dropped as not family practice. That left 3,251
-records, which merged into **3,022 sites**: about 1,520 high confidence, 1,130 medium and 370
-low. 137 sites were confirmed by both sources. About 2,390 sites have a phone and about 710 have
-an email. OpenStreetMap is added when the GitHub workflow runs.
+| Step | Count |
+| --- | --- |
+| Records loaded | 7,656 (Ministry 599, Overture 4,559, OpenStreetMap 2,498) |
+| Dropped as not family practice | 2,768 |
+| Kept | 4,886 |
+| **Sites after merging duplicates** | **4,325** (1,508 high confidence, 2,076 medium, 741 low) |
+| Sites found in 2+ sources | 402 |
+| Sites with a phone / email / website | 2,650 / 738 / 2,084 |
+| Sites with an estimated FSA (no postal code in any source) | 1,117 |
+| Sites with no FSA at all | 153 |
+| Pairs for review | 139 |
+
+Toronto (FSAs starting with M) has 1,084 sites, 872 of them high or medium confidence.
+
+Records with no postal code get the FSA of the nearest record that has one, within 800 m
+(`fsa_source` = `estimated`). OpenStreetMap rarely includes postal codes, so most of its
+records rely on this.
 
 ## Known limits
 
