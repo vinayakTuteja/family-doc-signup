@@ -6,6 +6,7 @@ database must be shared under ODbL too, with attribution "© OpenStreetMap contr
 
 import json
 import logging
+import time
 import urllib.parse
 import urllib.request
 
@@ -14,7 +15,13 @@ from ..record import SourceRecord
 
 log = logging.getLogger(__name__)
 
-OVERPASS_URL = "https://overpass-api.de/api/interpreter"
+# The main public Overpass server is busy at times; mirrors are tried in turn.
+OVERPASS_URLS = [
+    "https://overpass-api.de/api/interpreter",
+    "https://overpass.private.coffee/api/interpreter",
+    "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+]
+ATTEMPTS_PER_SERVER = 2
 
 QUERY = """
 [out:json][timeout:300];
@@ -32,9 +39,21 @@ out center tags;
 
 def fetch() -> dict:
     data = urllib.parse.urlencode({"data": QUERY}).encode()
-    req = urllib.request.Request(OVERPASS_URL, data=data, headers={"User-Agent": "family-doc-signup/1.0"})
-    with urllib.request.urlopen(req, timeout=400) as resp:
-        return json.load(resp)
+    last_error = None
+    for url in OVERPASS_URLS:
+        for attempt in range(ATTEMPTS_PER_SERVER):
+            try:
+                req = urllib.request.Request(url, data=data, headers={"User-Agent": "family-doc-signup/1.0"})
+                with urllib.request.urlopen(req, timeout=400) as resp:
+                    result = json.load(resp)
+                if result.get("elements"):
+                    return result
+                last_error = RuntimeError(f"{url} returned no elements")
+            except Exception as exc:  # busy server, timeout or bad gateway: wait and try again
+                last_error = exc
+                log.warning("Overpass %s attempt %d failed: %s", url, attempt + 1, exc)
+            time.sleep(20 * (attempt + 1))
+    raise RuntimeError(f"All Overpass servers failed: {last_error}")
 
 
 def parse(elements: list[dict]) -> list[SourceRecord]:
