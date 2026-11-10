@@ -25,7 +25,7 @@ from datetime import datetime, timezone
 
 from .classify import classify
 from .dedupe import deduplicate
-from .normalize import is_ontario_postal
+from .normalize import distance_m, is_ontario_postal
 from .record import SourceRecord
 
 log = logging.getLogger("clinics")
@@ -73,6 +73,38 @@ def load_sources(names: list[str], osm_file: str | None, overture_release: str |
     return loaded
 
 
+FSA_GUESS_MAX_M = 800
+GUESS_GRID = 0.01  # degrees, about 1 km
+
+
+def guess_missing_fsas(records: list[SourceRecord]) -> int:
+    """Give records without a postal code the FSA of the nearest record that has one (within 800 m).
+
+    Every loaded record is used as an anchor, including ones later excluded (a dentist next door
+    still tells us the postal area). Returns how many FSAs were estimated.
+    """
+    grid: dict = {}
+    for r in records:
+        if r.postal_code and r.lat is not None and r.lon is not None:
+            grid.setdefault((int(r.lat // GUESS_GRID), int(r.lon // GUESS_GRID)), []).append(r)
+    guessed = 0
+    for r in records:
+        if r.postal_code or r.lat is None or r.lon is None:
+            continue
+        cx, cy = int(r.lat // GUESS_GRID), int(r.lon // GUESS_GRID)
+        best, best_d = None, FSA_GUESS_MAX_M
+        for dx in (-1, 0, 1):
+            for dy in (-1, 0, 1):
+                for anchor in grid.get((cx + dx, cy + dy), []):
+                    d = distance_m(r.lat, r.lon, anchor.lat, anchor.lon)
+                    if d < best_d:
+                        best, best_d = anchor, d
+        if best:
+            r.fsa_guess = best.postal_code[:3]
+            guessed += 1
+    return guessed
+
+
 def in_scope(rec: SourceRecord, fsa_prefixes: list[str]) -> bool:
     if rec.postal_code and not is_ontario_postal(rec.postal_code):
         return False
@@ -109,6 +141,7 @@ def run(sources: list[str], fsa_prefixes: list[str], out_dir: str, osm_file: str
     # Read decisions before outputs are overwritten (the review file may live in out_dir).
     decisions = read_decisions(decisions_path)
     loaded = load_sources(sources, osm_file, overture_release)
+    fsas_guessed = guess_missing_fsas([r for records in loaded.values() for r in records])
 
     kept, excluded = [], []
     for name, records in loaded.items():
@@ -142,6 +175,9 @@ def run(sources: list[str], fsa_prefixes: list[str], out_dir: str, osm_file: str
         "sites_with_phone": sum(1 for s in sites if s["phones"]),
         "sites_with_website": sum(1 for s in sites if s["websites"]),
         "sites_without_postal_code": sum(1 for s in sites if not s["postal_code"]),
+        "records_with_estimated_fsa": fsas_guessed,
+        "sites_with_estimated_fsa": sum(1 for s in sites if s["fsa_source"] == "estimated"),
+        "sites_without_any_fsa": sum(1 for s in sites if not s["fsa"]),
         "sources_failed_or_empty": [k for k, v in loaded.items() if not v],
     }
 

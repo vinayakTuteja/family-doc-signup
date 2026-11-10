@@ -24,7 +24,7 @@ HARD_EXCLUDE = [
     r"midwi", r"blood donor", r"blood services", r"occupational health", r"sports medicine", r"orthop",
     r"\bsurg(eon|ery|ical)?\b", r"\blice\b", r"licesquad", r"infusion", r"diabetes education", r"recruitment",
     r"vaccin", r"ambulance", r"paramedic", r"\bstudio\b", r"endoscop", r"research", r"\bvein", r"men'?s health",
-    r"ob ?gyn", r"retirement", r"seniors village", r"long[- ]term care", r"rehab", r"kinesiolog",
+    r"ob ?gyn", r"retirement", r"seniors village", r"long[- ]term care", r"rehab", r"kinesiolog", r"\btcm\b", r"chinese medicine", r"sexual health", r"public health",
 ]
 # Words that usually mean "not a family practice", unless the name also clearly says it is one
 # (e.g. "Oak Park Medical Clinic & Pharmacy", "St Michael's Hospital Academic Family Health Team").

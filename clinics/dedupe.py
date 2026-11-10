@@ -195,7 +195,9 @@ def merge_cluster(members: list[Item], reasons: list[str]) -> dict:
         "address": with_address.rec.address,
         "city": with_address.rec.city or with_postal.rec.city,
         "postal_code": with_postal.rec.postal_code,
-        "fsa": with_postal.rec.fsa,
+        "fsa": with_postal.rec.fsa or next((m.rec.fsa for m in members if m.rec.fsa), ""),
+        "fsa_source": "postal_code" if with_postal.rec.postal_code else (
+            "estimated" if any(m.rec.fsa for m in members) else ""),
         "lat": round(best.rec.lat, 6) if best.rec.lat is not None else "",
         "lon": round(best.rec.lon, 6) if best.rec.lon is not None else "",
         "phones": "; ".join(union_ordered(p for m in members for p in m.rec.phones)),

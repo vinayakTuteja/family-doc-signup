@@ -195,3 +195,12 @@ def test_build_writes_outputs_and_filters_by_fsa(tmp_path, monkeypatch):
     assert os.path.getsize(out / "excluded.csv") > 0
     assert "Open Government Licence" in (out / "ATTRIBUTION.txt").read_text()
     assert json.loads((out / "summary.json").read_text())["sites_after_dedupe"] == 1
+
+
+def test_missing_fsa_is_estimated_from_nearest_record():
+    with_postal = rec(sid="a", name="Some Dental", postal="M6H 1A1", lat=43.6600, lon=-79.4300)
+    no_postal = rec(source="osm", sid="b", name="Duke Medical Clinic", postal="", lat=43.6630, lon=-79.4310)
+    far_away = rec(source="osm", sid="c", name="Remote Clinic", postal="", lat=44.5, lon=-80.0)
+    assert build.guess_missing_fsas([with_postal, no_postal, far_away]) == 1
+    assert no_postal.fsa == "M6H" and far_away.fsa == ""
+    assert build.in_scope(no_postal, ["M6"]) and not build.in_scope(far_away, ["M6"])

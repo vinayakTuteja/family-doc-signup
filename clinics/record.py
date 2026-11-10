@@ -19,10 +19,11 @@ class SourceRecord:
     websites: list[str] = field(default_factory=list)  # as given
     category: str = ""          # source's own category
     raw_type: str = ""          # extra type detail from the source
+    fsa_guess: str = ""         # estimated from the nearest record with a postal code, if none given
 
     @property
     def fsa(self) -> str:
-        return self.postal_code[:3] if self.postal_code else ""
+        return self.postal_code[:3] if self.postal_code else self.fsa_guess
 
     def to_dict(self) -> dict:
         d = asdict(self)
