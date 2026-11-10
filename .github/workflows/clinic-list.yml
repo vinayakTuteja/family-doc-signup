@@ -1,0 +1,35 @@
+name: build clinic list
+
+# Builds the deduplicated list of Ontario family practice sites from all free sources
+# (Ontario Ministry of Health locations, Overture Maps, OpenStreetMap) and attaches the
+# results to the run as a downloadable artifact. Run it from the Actions tab.
+
+on:
+  workflow_dispatch:
+    inputs:
+      fsa:
+        description: "FSA prefixes to keep, space separated (e.g. M4 M5 M6). Leave blank for all of Ontario."
+        required: false
+        default: ""
+  schedule:
+    - cron: "17 9 3 * *"   # monthly, after Overture's monthly release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: pip install -r requirements-pipeline.txt
+      - name: Build clinic list
+        run: |
+          python -m clinics.build --out out/clinics ${{ inputs.fsa && format('--fsa {0}', inputs.fsa) || '' }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: clinic-list
+          path: out/clinics/
+          retention-days: 30

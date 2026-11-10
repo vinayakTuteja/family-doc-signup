@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-11-09
+
+- Clinic list pipeline (`clinics/`): combines Ontario Ministry of Health service locations,
+  Overture Maps and OpenStreetMap; drops non-family-practice records; merges duplicates by
+  email, phone, website, name similarity and location, with rural FSAs handled separately;
+  links chains by shared contact details; writes a review list whose decisions feed back in.
+- GitHub workflow to build the list on demand and monthly.
+- First run: 3,022 sites from the Ministry and Overture.
+
 ## 2026-11-01
 
 - Signup is now one question per screen, with a progress bar, Back and Next, auto-advance on

@@ -13,6 +13,7 @@ See [docs/product.md](docs/product.md).
 | [docs/product.md](docs/product.md) | The problem, what is built, the phases ahead, data model |
 | [docs/ranking.md](docs/ranking.md) | How we decide who hears about an opening first, and why |
 | [docs/compliance.md](docs/compliance.md) | Privacy, anti-spam and CPSO notes, retention schedule, launch checklist |
+| [docs/clinic-list.md](docs/clinic-list.md) | How the Ontario family practice site list is built from free sources |
 | [CHANGELOG.md](CHANGELOG.md) | What changed and when |
 
 ## See it without installing anything
@@ -44,6 +45,16 @@ pytest -q
 ```
 
 Tests also run automatically on GitHub for every push and pull request.
+
+## Build the clinic list
+
+```bash
+pip install -r requirements-pipeline.txt
+python -m clinics.build --fsa M4 M5 M6     # or leave out --fsa for all of Ontario
+```
+
+Or run the **build clinic list** workflow from the GitHub Actions tab to get all sources,
+including OpenStreetMap, as a download. Details in [docs/clinic-list.md](docs/clinic-list.md).
 
 ## Put it online (Fly.io, Toronto region)
 
@@ -80,7 +91,8 @@ app/
   config.py        settings from environment variables
   templates/       pages
   static/          style.css and app.js (step-by-step form, plain ES5 for older phones)
-docs/              product, ranking and compliance notes
+clinics/           builds the deduplicated Ontario family practice site list (see docs/clinic-list.md)
+docs/              product, ranking, compliance and clinic list notes
 preview/           click-through simulation and the script that builds it
 scripts/           retention.py for running retention by hand
 tests/             automated tests
