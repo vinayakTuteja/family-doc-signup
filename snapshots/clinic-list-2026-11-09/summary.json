@@ -1,0 +1,36 @@
+{
+  "built_at": "2026-11-10T02:54:43+00:00",
+  "fsa_filter": "all Ontario",
+  "records_loaded": {
+    "ontario_moh": 599,
+    "overture": 4559,
+    "osm": 2498
+  },
+  "records_in_scope": 7654,
+  "records_excluded_not_family_practice": 2768,
+  "records_kept": 4886,
+  "sites_after_dedupe": 4325,
+  "duplicates_merged": 561,
+  "review_pairs": 139,
+  "decisions_applied": 0,
+  "sites_by_type": {
+    "team_based": 598,
+    "family_practice": 3390,
+    "np_led": 64,
+    "walk_in": 273
+  },
+  "sites_by_confidence": {
+    "medium": 2076,
+    "high": 1508,
+    "low": 741
+  },
+  "sites_found_in_2_plus_sources": 402,
+  "sites_with_email": 738,
+  "sites_with_phone": 2650,
+  "sites_with_website": 2084,
+  "sites_without_postal_code": 1270,
+  "records_with_estimated_fsa": 2072,
+  "sites_with_estimated_fsa": 1117,
+  "sites_without_any_fsa": 153,
+  "sources_failed_or_empty": []
+}

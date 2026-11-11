@@ -1,0 +1,15 @@
+Data sources and licences
+
+Ontario Ministry of Health Service Provider Locations (MOHSERLO)
+  Contains information licensed under the Open Government Licence – Ontario.
+  https://www.ontario.ca/page/open-government-licence-ontario
+
+Overture Maps Foundation, Places theme
+  Per-record licence (CDLA-Permissive-2.0, Apache-2.0 or CC0-1.0); see the "licences" column.
+  https://docs.overturemaps.org/attribution/
+
+OpenStreetMap
+  © OpenStreetMap contributors. Open Database License (ODbL) 1.0.
+  Internal use is fine. If a database built from this data is ever published or shared
+  outside the organization, it must be offered under the ODbL as well.
+  https://www.openstreetmap.org/copyright
